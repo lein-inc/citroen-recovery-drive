@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CITROËN C5 AIRCROSS RECOVERY DRIVE — Wireframes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #222; background: #fff; line-height: 1.7;
+  }
+
+  /* ===== 認証画面 ===== */
+  .auth-screen {
+    height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+  }
+  .auth-screen h1 {
+    font-size: 14px; font-weight: 700; letter-spacing: 4px; color: #999;
+  }
+  .auth-form {
+    display: flex; gap: 8px;
+  }
+  .auth-form input {
+    padding: 10px 16px; font-size: 14px;
+    border: 1px solid #ccc; outline: none; width: 200px;
+  }
+  .auth-form input:focus { border-color: #222; }
+  .auth-form button {
+    padding: 10px 24px; font-size: 13px; font-weight: 700;
+    background: #222; color: #fff; border: none; cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .auth-error {
+    font-size: 12px; color: #c33; height: 16px;
+  }
+
+  /* ===== メインコンテンツ ===== */
+  .main { display: none; max-width: 800px; margin: 0 auto; padding: 80px 24px; }
+  .main.visible { display: block; }
+
+  .main h1 {
+    font-size: 14px; font-weight: 700; letter-spacing: 4px; color: #999;
+    margin-bottom: 8px;
+  }
+  .main h2 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+  }
+  .main .subtitle {
+    font-size: 14px; color: #888; margin-bottom: 48px;
+  }
+
+  .page-list {
+    list-style: none; display: flex; flex-direction: column; gap: 0;
+  }
+  .page-item {
+    border-bottom: 1px solid #eee; padding: 20px 0;
+  }
+  .page-item:first-child { border-top: 1px solid #eee; }
+  .page-item a {
+    text-decoration: none; color: #222;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .page-item a:hover .page-name { text-decoration: underline; }
+  .page-name {
+    font-size: 16px; font-weight: 700; margin-bottom: 2px;
+  }
+  .page-desc {
+    font-size: 13px; color: #888;
+  }
+  .page-arrow {
+    font-size: 18px; color: #ccc; flex-shrink: 0; margin-left: 16px;
+  }
+  .page-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; padding: 2px 8px; margin-left: 8px;
+    border: 1px solid #ccc; color: #999; vertical-align: middle;
+  }
+
+  .footer-note {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid #eee;
+    font-size: 11px; color: #bbb;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 認証 ===== -->
+<div class="auth-screen" id="auth">
+  <h1>CITROËN RECOVERY DRIVE</h1>
+  <div class="auth-form">
+    <input type="password" id="pw" placeholder="パスワード" autofocus>
+    <button onclick="checkPw()">ENTER</button>
+  </div>
+  <div class="auth-error" id="err"></div>
+</div>
+
+<!-- ===== ページマップ ===== -->
+<div class="main" id="main">
+  <h1>CITROËN C5 AIRCROSS</h1>
+  <h2>RECOVERY DRIVE</h2>
+  <p class="subtitle">ワイヤーフレーム一覧</p>
+
+  <ul class="page-list">
+    <li class="page-item">
+      <a href="wireframe.html">
+        <div>
+          <div class="page-name">ベースワイヤー <span class="page-badge">BASE</span></div>
+          <div class="page-desc">車両訴求メインのLP構成。モノクロシンプル。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="wireframe_animated.html">
+        <div>
+          <div class="page-name">ベースワイヤー + ヒーローアニメーション</div>
+          <div class="page-desc">ベースワイヤーのヒーローにルートマップ走行アニメーションを埋め込み。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="wireframe_couple.html">
+        <div>
+          <div class="page-name">夫婦リカバリー案 <span class="page-badge">COUPLE</span></div>
+          <div class="page-desc">「走るほどに、リカバリー。」夫婦の距離を縮めるコピー軸。データ・ビフォーアフター・夫婦の声。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="wireframe_d-travel.html">
+        <div>
+          <div class="page-name">d design travel コラボ案 v1 <span class="page-badge">D TRAVEL</span></div>
+          <div class="page-desc">RECOVERY dRIVE — コース・旅をメインに訴求。神藤編集長コメント付きタイムライン。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="wireframe_d-travel_v2.html">
+        <div>
+          <div class="page-name">d design travel コラボ案 v2 <span class="page-badge">D TRAVEL v2</span></div>
+          <div class="page-desc">v1 + マルチロウカルーセルヒーロー + C5 AIRCROSS フィーチャー大型化。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="hero_animation.html">
+        <div>
+          <div class="page-name">ヒーローアニメーション単体</div>
+          <div class="page-desc">東京→北茨城ルートマップ上をC5 AIRCROSSが走行するCanvas演出。</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="footer-note">
+    CITROËN C5 AIRCROSS RECOVERY DRIVE — Wireframes &copy; 2026
+  </div>
+</div>
+
+<script>
+const HASH = '44d6d784341500f18789faf75b0b8ca76106903b7f1ab3bac51c476427bd6aa4';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkPw() {
+  const v = document.getElementById('pw').value;
+  const h = await sha256(v);
+  if (h === HASH) {
+    sessionStorage.setItem('rd_auth', '1');
+    show();
+  } else {
+    document.getElementById('err').textContent = 'パスワードが違います';
+  }
+}
+
+function show() {
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('main').classList.add('visible');
+}
+
+document.getElementById('pw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPw();
+});
+
+if (sessionStorage.getItem('rd_auth') === '1') show();
+</script>
+</body>
+</html>

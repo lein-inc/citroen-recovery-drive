@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C5 AIRCROSS RECOVERY DRIVE｜ふたりの時間を、取り戻すドライブ。</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #222; background: #fff; line-height: 1.7;
+  }
+
+  .section { padding: 64px 24px; max-width: 960px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: #999; margin-bottom: 8px;
+  }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .section-sub { font-size: 14px; color: #666; max-width: 560px; line-height: 1.8; }
+  .cta-btn {
+    display: inline-block; background: #222; color: #fff;
+    padding: 14px 40px; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; border: none; cursor: pointer; text-decoration: none;
+  }
+  .cta-btn-outline { background: transparent; border: 1px solid #666; color: #666; }
+  .note { display: none; }
+  .placeholder {
+    background: #eee; border: 1px dashed #ccc;
+    display: flex; align-items: center; justify-content: center;
+    color: #999; font-size: 12px;
+  }
+
+  /* ===== ナビ ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #ddd;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 56px;
+  }
+  .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+  .nav-cta {
+    background: #222; color: #fff; padding: 8px 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    border: none; cursor: pointer;
+  }
+
+  /* ===== ヒーロー ===== */
+  .hero {
+    height: calc(100vh - 56px);
+    min-height: 560px;
+    background: #e8e8e8;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; margin-top: 56px; position: relative;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 640px; padding: 0 24px; }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 5px; color: #777; margin-bottom: 24px;
+  }
+  .hero-catch {
+    font-size: 48px; font-weight: 700; letter-spacing: 4px;
+    margin-bottom: 16px; color: #222;
+  }
+  .hero-sub {
+    font-size: 20px; color: #444; letter-spacing: 1px;
+    margin-bottom: 12px; line-height: 1.8; font-weight: 300;
+  }
+  .hero-note {
+    font-size: 14px; color: #888; margin-bottom: 40px; line-height: 1.8;
+  }
+
+  /* ===== 問いかけセクション ===== */
+  .question {
+    text-align: center; padding: 100px 24px;
+  }
+  .question-text {
+    font-size: 26px; font-weight: 300; line-height: 2.2;
+    max-width: 540px; margin: 0 auto; color: #333;
+  }
+  .question-text strong {
+    font-weight: 700;
+  }
+
+  /* ===== インサイト ===== */
+  .insight {
+    background: #f5f5f5;
+  }
+  .insight-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; max-width: 960px; margin: 40px auto 0;
+    border: 1px solid #ddd;
+  }
+  .insight-card {
+    padding: 40px 28px; text-align: center;
+    border-right: 1px solid #ddd;
+  }
+  .insight-card:last-child { border-right: none; }
+  .insight-card .number {
+    font-size: 48px; font-weight: 900; color: #222; margin-bottom: 4px;
+    letter-spacing: -2px;
+  }
+  .insight-card .unit {
+    font-size: 14px; color: #666; margin-bottom: 16px;
+  }
+  .insight-card p {
+    font-size: 13px; color: #666; line-height: 1.8;
+  }
+  .insight-source {
+    text-align: right; font-size: 10px; color: #bbb;
+    max-width: 960px; margin: 8px auto 0;
+  }
+
+  /* ===== 処方箋 ===== */
+  .prescription {
+    text-align: center; padding: 100px 24px;
+  }
+  .prescription-text {
+    font-size: 22px; font-weight: 300; line-height: 2.4;
+    max-width: 520px; margin: 0 auto; color: #333;
+  }
+  .prescription-text em {
+    font-style: normal; font-weight: 700;
+    border-bottom: 2px solid #222;
+  }
+
+  /* ===== ビフォーアフター ===== */
+  .before-after {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; max-width: 960px; margin: 0 auto;
+  }
+  .ba-card {
+    padding: 48px 40px;
+  }
+  .ba-card.before { background: #f0f0f0; }
+  .ba-card.after { background: #222; color: #fff; }
+  .ba-card .ba-label {
+    font-size: 10px; letter-spacing: 3px; color: #999; margin-bottom: 20px;
+  }
+  .ba-card.after .ba-label { color: #777; }
+  .ba-card h3 {
+    font-size: 18px; font-weight: 700; margin-bottom: 16px; line-height: 1.6;
+  }
+  .ba-card ul {
+    list-style: none; font-size: 13px; line-height: 2.2; color: #666;
+  }
+  .ba-card.after ul { color: #ccc; }
+  .ba-card ul li { padding-left: 16px; position: relative; }
+  .ba-card ul li::before {
+    content: '—'; position: absolute; left: 0; color: #bbb;
+  }
+  .ba-card.after ul li::before { color: #555; }
+
+  /* ===== 快適性（夫婦文脈） ===== */
+  .comfort-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px; max-width: 960px; margin: 40px auto 0;
+  }
+  .comfort-card {
+    text-align: center; padding: 32px 16px; border: 1px solid #ddd;
+  }
+  .comfort-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #222; color: #fff; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .comfort-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .comfort-card .sub {
+    font-size: 10px; letter-spacing: 1px; color: #999; margin-bottom: 12px;
+  }
+  .comfort-card p { font-size: 13px; color: #666; line-height: 1.8; }
+  .comfort-card .couple-scene {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee;
+    font-size: 12px; color: #888; line-height: 1.7;
+  }
+
+  /* ===== 夫婦の声 ===== */
+  .voices-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 24px; max-width: 960px; margin: 40px auto 0;
+  }
+  .voice-card { border: 1px solid #ddd; display: flex; overflow: hidden; }
+  .voice-photo { width: 200px; flex-shrink: 0; }
+  .voice-body { padding: 28px; }
+  .voice-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .voice-body .age { font-size: 11px; color: #999; margin-bottom: 12px; }
+  .voice-body blockquote {
+    font-size: 13px; line-height: 1.9; color: #555;
+    border-left: 2px solid #ccc; padding-left: 12px; margin: 0 0 12px;
+  }
+  .voice-body .partner {
+    font-size: 12px; color: #888; padding-left: 12px;
+    border-left: 2px solid #ddd;
+  }
+  .voice-body .partner strong { color: #666; }
+
+  /* ===== コース ===== */
+  .courses { max-width: 960px; margin: 0 auto; padding: 64px 24px; }
+  .course-hero { margin-bottom: 40px; border: 1px solid #ddd; }
+  .course-hero-map { height: 480px; }
+  .course-hero-info { background: #f5f5f5; padding: 32px 40px; }
+  .course-hero-info h3 {
+    font-size: 20px; font-weight: 700; margin-bottom: 12px; line-height: 1.5;
+  }
+  .course-meta { display: flex; gap: 16px; margin-bottom: 16px; }
+  .course-meta span { font-size: 11px; color: #999; letter-spacing: 1px; }
+  .course-hero-info p { font-size: 13px; line-height: 1.8; color: #666; }
+  .course-timeline { max-width: 700px; margin: 0 auto; }
+  .spot {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: 20px; padding: 20px 0; border-bottom: 1px solid #eee;
+  }
+  .spot-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #222; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .spot-num.stay { background: #666; }
+  .spot-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .spot-genre { font-size: 11px; color: #999; margin-bottom: 6px; }
+  .spot-body p { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 6px; }
+  .spot-talk {
+    display: inline-block; background: #f0f0f0;
+    padding: 4px 12px; font-size: 12px; color: #555;
+  }
+  .spot-drive {
+    text-align: center; padding: 8px; font-size: 11px; color: #bbb;
+  }
+
+  /* ===== スペック ===== */
+  .spec-section { background: #f5f5f5; }
+  .spec-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 800px; margin: 40px auto 0;
+  }
+  .spec-card {
+    border: 1px solid #ddd; background: #fff;
+    padding: 32px 24px; text-align: center;
+  }
+  .spec-card h4 { font-size: 10px; letter-spacing: 2px; color: #999; margin-bottom: 4px; }
+  .spec-card .grade { font-size: 18px; font-weight: 700; letter-spacing: 2px; margin-bottom: 12px; }
+  .spec-card .price { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  .spec-card .price span { font-size: 12px; font-weight: 400; }
+  .spec-card ul {
+    list-style: none; text-align: left; font-size: 12px; line-height: 2; color: #666;
+  }
+  .spec-card ul li::before { content: '- '; color: #ccc; }
+
+  /* ===== CTA ===== */
+  .cta-section { padding: 100px 24px; text-align: center; }
+  .cta-section .cta-catch {
+    font-size: 28px; font-weight: 700; margin-bottom: 16px; line-height: 1.6;
+  }
+
+  /* ===== フッター ===== */
+  .footer {
+    background: #222; color: #fff; padding: 40px 24px; text-align: center;
+  }
+  .footer-logo { font-size: 16px; font-weight: 700; letter-spacing: 4px; margin-bottom: 12px; }
+  .footer-links {
+    display: flex; justify-content: center; gap: 24px;
+    font-size: 11px; color: #888; margin-bottom: 16px;
+  }
+  .footer-copy { font-size: 10px; color: #555; }
+
+  /* ===== フローティングCTA ===== */
+  .floating-cta {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #222; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    z-index: 99;
+  }
+  .floating-cta p { color: #fff; font-size: 12px; letter-spacing: 1px; }
+  .floating-cta .cta-btn { padding: 10px 28px; font-size: 12px; background: #555; }
+
+  /* ===== レスポンシブ ===== */
+  @media (max-width: 768px) {
+    .hero-catch { font-size: 32px; }
+    .hero-sub { font-size: 16px; }
+    .question-text { font-size: 20px; }
+    .insight-grid { grid-template-columns: 1fr; }
+    .insight-card { border-right: none; border-bottom: 1px solid #ddd; }
+    .insight-card:last-child { border-bottom: none; }
+    .before-after { grid-template-columns: 1fr; }
+    .comfort-grid { grid-template-columns: 1fr; }
+    .voices-grid { grid-template-columns: 1fr; }
+    .voice-card { flex-direction: column; }
+    .voice-photo { width: 100%; height: 180px; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .course-hero-map { height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ナビ ===== -->
+<nav class="nav">
+  <div class="nav-logo">CITROËN C5 AIRCROSS</div>
+  <button class="nav-cta">試乗予約 →</button>
+</nav>
+
+<!-- ===== 1. ヒーロー ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">A : CITROËN からのメッセージ</div>
+    <h1 class="hero-catch">走るほどに、リカバリー。</h1>
+    <p class="hero-sub">
+      ココロも、カラダも、関係も、気がつけばあの日の二人。<br>
+      シトロエン史上最大の乗り心地を極めた NEW C5 AIRCROSS で。<br>
+      さあ、リカバリードライブへ。
+    </p>
+    <a href="#cta" class="cta-btn">試乗予約はこちら →</a>
+  </div>
+  <div class="placeholder" style="position:absolute; bottom:0; left:0; right:0; height:180px;">
+    夫婦 × C5 AIRCROSS ライフスタイルビジュアル
+  </div>
+</section>
+
+<!-- ===== 2. コース導入 ===== -->
+<section class="question">
+  <p class="question-text" style="font-size:18px; line-height:2.4;">
+    d design travel 神藤秀人編集長が考える、<br>
+    とっておきのリカバリードライブ。<br><br>
+    <strong>「ふたりの距離を縮めていく」</strong><br>
+    ——特別な旅へ。C5 AIRCROSS
+  </p>
+</section>
+
+<!-- ===== 3. インサイト（データで共感） ===== -->
+<section class="insight">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">INSIGHT</div>
+    <h2 class="section-title">夫婦の「距離」は、数字に出ている。</h2>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="number">47<span style="font-size:24px;">%</span></div>
+        <div class="unit">の夫婦が</div>
+        <p>「平日にふたりで会話する時間は<br>30分未満」と回答。</p>
+      </div>
+      <div class="insight-card">
+        <div class="number">62<span style="font-size:24px;">%</span></div>
+        <div class="unit">の既婚者が</div>
+        <p>「結婚前より一緒に<br>出かける回数が減った」と実感。</p>
+      </div>
+      <div class="insight-card">
+        <div class="number">83<span style="font-size:24px;">%</span></div>
+        <div class="unit">のカップルが</div>
+        <p>「一緒にドライブすると<br>会話が増える」と回答。</p>
+      </div>
+    </div>
+    <div class="insight-source">※数値はコミュニケーションに関する意識調査より（イメージ）</div>
+  </div>
+</section>
+
+<!-- ===== 4. 処方箋 ===== -->
+<section class="prescription">
+  <p class="prescription-text">
+    忙しい日常では、話す時間がない。<br>
+    向き合うのは、少し気恥ずかしい。<br><br>
+    でも、<em>隣に座って、前を向いて走る</em>。<br>
+    それだけで、言葉は自然に出てくる。
+  </p>
+</section>
+
+<!-- ===== 5. ビフォーアフター ===== -->
+<div style="max-width:960px; margin:0 auto; padding:0 24px;">
+  <div style="text-align:center; margin-bottom:32px;">
+    <div class="section-label">BEFORE / AFTER</div>
+    <h2 class="section-title">車が変わると、ふたりの時間が変わる。</h2>
+  </div>
+  <div class="before-after">
+    <div class="ba-card before">
+      <div class="ba-label">BEFORE — いつものドライブ</div>
+      <h3>1時間も走ると、<br>どちらかが疲れている。</h3>
+      <ul>
+        <li>路面の振動がシートに伝わる</li>
+        <li>助手席が居心地悪そう</li>
+        <li>エンジン音で音楽が聞こえない</li>
+        <li>到着する頃にはお互い無言</li>
+      </ul>
+    </div>
+    <div class="ba-card after">
+      <div class="ba-label">AFTER — C5 AIRCROSS のドライブ</div>
+      <h3>250km走っても、<br>話が止まらない。</h3>
+      <ul>
+        <li>PHCが路面の凹凸を吸収、揺れない</li>
+        <li>助手席も「もっと乗りたい」と言う</li>
+        <li>EVモードで車内が静か</li>
+        <li>「次はどこ行こうか」が口癖になる</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6. 快適性（夫婦文脈） ===== -->
+<section style="padding-top:80px;">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">WHY C5 AIRCROSS?</div>
+    <h2 class="section-title">会話が続く、3つの理由。</h2>
+    <p class="section-sub" style="margin:0 auto;">
+      C5 AIRCROSSの快適性は、ふたりの時間を変えるためにある。
+    </p>
+
+    <div class="comfort-grid">
+      <div class="comfort-card">
+        <div class="comfort-icon">PHC</div>
+        <h3>PHC®</h3>
+        <div class="sub">PROGRESSIVE HYDRAULIC CUSHION</div>
+        <p>路面の凹凸を油圧で吸収する独自のサスペンション。段差を超えても、車内は揺れません。</p>
+        <div class="couple-scene">揺れないから、コーヒーもこぼれない。助手席で読書もできる。</div>
+      </div>
+      <div class="comfort-card">
+        <div class="comfort-icon">SEAT</div>
+        <h3>アドバンストコンフォートシート</h3>
+        <div class="sub">ADVANCED COMFORT SEATS</div>
+        <p>多層フォームが体圧を分散。運転席も助手席も、長時間座っていたくなる座り心地。</p>
+        <div class="couple-scene">「助手席がこんなに快適な車、初めて」——パートナーからの最高の褒め言葉。</div>
+      </div>
+      <div class="comfort-card">
+        <div class="comfort-icon">48V</div>
+        <h3>静粛性 × 48Vハイブリッド</h3>
+        <div class="sub">48V HYBRID SYSTEM</div>
+        <p>市街地の約50%をEVモードで走行。静かな車内で、音楽も会話もクリアに。</p>
+        <div class="couple-scene">声を張らなくていい。ささやくような会話でも、ちゃんと届く。</div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <a href="#cta" class="cta-btn">この乗り心地を体感する →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. 夫婦の声 ===== -->
+<section style="background:#f5f5f5;">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">VOICES</div>
+    <h2 class="section-title">ふたりで乗った人の声</h2>
+
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="width:200px;">夫婦写真</div>
+        <div class="voice-body">
+          <h4>T.K. さん夫妻</h4>
+          <div class="age">40代 / 結婚15年 / 茨城コース体験</div>
+          <blockquote>以前の車だと長距離は疲れて無言になりがちだったけど、C5だと不思議と会話が続く。久しぶりに「次どこ行く？」って話で盛り上がりました。</blockquote>
+          <div class="partner"><strong>奥さま:</strong> 助手席がこんなに快適だとは思わなかった。また行きたい、って自分から言いました。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="width:200px;">夫婦写真</div>
+        <div class="voice-body">
+          <h4>M.S. さん夫妻</h4>
+          <div class="age">30代 / 結婚5年 / 週末ドライブ派</div>
+          <blockquote>子どもが生まれてからふたりの時間がなくなって。週末ドライブを再開したら、ちゃんと話せるようになった。車のおかげです。</blockquote>
+          <div class="partner"><strong>奥さま:</strong> 揺れないから子どもも寝てくれて、実はそれがふたりの会話タイム（笑）</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="width:200px;">夫婦写真</div>
+        <div class="voice-body">
+          <h4>R.N. さん夫妻</h4>
+          <div class="age">50代 / 結婚25年 / 1泊旅行好き</div>
+          <blockquote>子どもが独立して、夫婦ふたりに戻ったとき、何を話せばいいかわからなかった。ドライブで景色を共有するうちに、自然と会話が戻ってきました。</blockquote>
+          <div class="partner"><strong>奥さま:</strong> 帰りの車で「来月も行こう」が定番。この車にしてから旅行が増えました。</div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="width:200px;">夫婦写真</div>
+        <div class="voice-body">
+          <h4>Y.A. さん夫妻</h4>
+          <div class="age">40代 / 結婚12年 / 共働き</div>
+          <blockquote>共働きで平日はすれ違い。週末のドライブが唯一ゆっくり話せる時間。この車は「移動するリビング」みたいな感覚です。</blockquote>
+          <div class="partner"><strong>ご主人:</strong> 妻が「今度はあそこ行きたい」ってGoogle Mapにピン打ってくる。嬉しい変化です。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. ドライブコース ===== -->
+<section class="courses" id="courses">
+  <div style="text-align:center; margin-bottom:16px;">
+    <div class="section-label">RECOVERY DRIVE COURSES</div>
+    <h2 class="section-title">ふたりで走りたい、おすすめコース</h2>
+    <p class="section-sub" style="margin:0 auto;">
+      会話が生まれるスポットを巡る、1泊2日のドライブルート。
+    </p>
+  </div>
+
+  <div style="display:flex; border-bottom:1px solid #ddd; margin-bottom:40px;">
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#222; border-bottom:2px solid #222; cursor:pointer;">東京スタート</div>
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#999; cursor:pointer;">名古屋スタート</div>
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#999; cursor:pointer;">大阪スタート</div>
+  </div>
+
+  <!-- コース監修者 -->
+  <div style="display:flex; gap:24px; align-items:center; border:1px solid #ddd; padding:24px 28px; margin-bottom:40px;">
+    <div class="placeholder" style="width:100px; height:100px; border-radius:50%; flex-shrink:0;">写真</div>
+    <div>
+      <div style="font-size:10px; letter-spacing:2px; color:#999; margin-bottom:4px;">COURSE DIRECTOR</div>
+      <h4 style="font-size:15px; font-weight:700; margin-bottom:4px;">神藤 秀人</h4>
+      <div style="font-size:11px; color:#999; margin-bottom:8px;">d design travel 編集長</div>
+      <p style="font-size:13px; color:#666; line-height:1.8; margin:0;">「その土地らしさ」を伝える『d design travel』編集長。今回のコースでは、建築・クラフト・食を軸に、ふたりの会話が自然と生まれるスポットを選定。</p>
+    </div>
+  </div>
+
+  <div class="course-hero">
+    <div class="course-hero-map placeholder" style="height:480px;">
+      Googleマイマップ埋め込み（iframe）
+    </div>
+    <div class="course-hero-info">
+      <div class="course-meta">
+        <span>1泊2日</span>
+        <span>約250km</span>
+        <span>11スポット</span>
+      </div>
+      <h3>アート＆建築の旅　東京 → 茨城</h3>
+      <p>谷中の朝から始まり、丹下健三、磯崎新、妹島和世の建築を巡りながら、クラフトと食を楽しむ1泊2日。共通の体験が、ふたりの会話を取り戻します。</p>
+    </div>
+  </div>
+
+  <div class="course-timeline">
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>HAGISO</h4>
+        <div class="spot-genre">宿泊 / カフェ — 台東区谷中</div>
+        <p>築60年の木造アパートをリノベした複合施設。HAGI CAFEでモーニングから旅をスタート。</p>
+        <div class="spot-talk">「こういう宿、初めてだね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+
+    <div class="spot">
+      <div class="spot-num">2</div>
+      <div class="spot-body">
+        <h4>東京カテドラル聖マリア大聖堂</h4>
+        <div class="spot-genre">建築 — 文京区関口</div>
+        <p>丹下健三の代表作。ステンレスの外装と十字架型の平面構成。</p>
+        <div class="spot-talk">「この建築、どう思う？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+
+    <div class="spot">
+      <div class="spot-num">3</div>
+      <div class="spot-body">
+        <h4>cox / Shingoster LIVING</h4>
+        <div class="spot-genre">ギャラリー / カフェ — つくば市</div>
+        <p>宇宙船のようなコンクリート建築と古民家が隣接。笠間の作家・小林東洋氏の器。</p>
+        <div class="spot-talk">「こういう器、家にも欲しいね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+
+    <div class="spot">
+      <div class="spot-num">4</div>
+      <div class="spot-body">
+        <h4>そばまさ</h4>
+        <div class="spot-genre">食事 — 水戸市</div>
+        <p>地元で愛される手打ち蕎麦。名物「つけけんちん」は売り切れ注意。</p>
+        <div class="spot-talk">「やっぱり手打ちは違うね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">5</div>
+      <div class="spot-body">
+        <h4>水戸芸術館</h4>
+        <div class="spot-genre">建築 / 美術 — 水戸市</div>
+        <p>磯崎新設計。らせん状のシンボルタワーから水戸を一望。</p>
+        <div class="spot-talk">「上から見る街って新鮮だね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">6</div>
+      <div class="spot-body">
+        <h4>鈴木茂兵衛商店</h4>
+        <div class="spot-genre">工芸 — 水戸市</div>
+        <p>慶応元年創業。伝統の水府提灯をモダンにアップデート。</p>
+        <div class="spot-talk">「これ、リビングに飾りたい」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+
+    <div class="spot">
+      <div class="spot-num">7</div>
+      <div class="spot-body">
+        <h4>サザコーヒー 本店</h4>
+        <div class="spot-genre">カフェ — ひたちなか市</div>
+        <p>スペシャルティコーヒーの名店。将軍コーヒーが人気。</p>
+        <div class="spot-talk">「次の旅のこと、考えない？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+
+    <div class="spot">
+      <div class="spot-num">8</div>
+      <div class="spot-body">
+        <h4>木内酒造</h4>
+        <div class="spot-genre">酒蔵 — 那珂市</div>
+        <p>1823年創業。常陸野ネストビールで知られる酒蔵。見学・試飲可。</p>
+        <div class="spot-talk">「お土産、何にする？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+
+    <div class="spot">
+      <div class="spot-num">9</div>
+      <div class="spot-body">
+        <h4>日立駅</h4>
+        <div class="spot-genre">建築 — 日立市</div>
+        <p>妹島和世設計。海に面したガラス張りの駅舎。展望台としても。</p>
+        <div class="spot-talk">「駅なのに、こんな景色なんだ」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約2分</div>
+
+    <div class="spot">
+      <div class="spot-num">10</div>
+      <div class="spot-body">
+        <h4>山文魚</h4>
+        <div class="spot-genre">食事 — 日立市</div>
+        <p>割烹着の女将がもてなす魚料理店。あんこう鍋が絶品。</p>
+        <div class="spot-talk">「今日一番おいしかったもの、何？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約40分</div>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>里海邸 金波楼本邸</h4>
+        <div class="spot-genre">宿泊 — 北茨城市</div>
+        <p>明治創業の旅館再生。海と一体化する空間。焼き魚の朝食が忘れられない。</p>
+        <div class="spot-talk">「明日、どこ行こうか」</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin:28px 0 16px;">DAY 2</h3>
+    <div class="spot">
+      <div class="spot-num" style="background:#999;">→</div>
+      <div class="spot-body">
+        <h4>笠間・益子方面へ</h4>
+        <div class="spot-genre">陶芸の街へ</div>
+        <p>詳細は近日公開予定。</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="#cta" class="cta-btn">C5 AIRCROSSを試乗する →</a>
+  </div>
+</section>
+
+<!-- ===== 9. スペック ===== -->
+<section class="spec-section">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">LINEUP</div>
+    <h2 class="section-title">C5 AIRCROSS HYBRID</h2>
+
+    <div class="spec-grid">
+      <div class="spec-card">
+        <h4>GRADE</h4>
+        <div class="grade">PLUS HYBRID</div>
+        <div class="price">¥5,350,000<span>〜</span></div>
+        <ul>
+          <li>PHC® サスペンション</li>
+          <li>アドバンストコンフォートシート</li>
+          <li>48V ハイブリッドシステム</li>
+          <li>ワイヤレススマートフォンチャージ</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>GRADE</h4>
+        <div class="grade">MAX HYBRID</div>
+        <div class="price">¥5,700,000<span>〜</span></div>
+        <ul>
+          <li>PLUS HYBRID 全装備 +</li>
+          <li>LEDマトリクスヘッドライト</li>
+          <li>ヘッドアップディスプレイ</li>
+          <li>パノラミックサンルーフ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <a href="#" class="cta-btn cta-btn-outline">詳しいスペックを見る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. CTA ===== -->
+<section class="cta-section" id="cta">
+  <div class="section-label">TEST DRIVE</div>
+  <h2 class="cta-catch">まずはふたりで、試乗してみてください。</h2>
+  <p class="section-sub" style="margin:0 auto 32px;">
+    助手席の乗り心地を、パートナーに体感してもらう。<br>
+    それが、RECOVERY DRIVE の第一歩です。
+  </p>
+  <a href="#" class="cta-btn" style="padding:18px 56px; font-size:15px;">試乗を予約する →</a>
+</section>
+
+<!-- ===== 11. フッター ===== -->
+<footer class="footer">
+  <div class="footer-logo">CITROËN</div>
+  <div class="footer-links">
+    <span>公式サイト</span>
+    <span>ディーラー検索</span>
+    <span>カタログ請求</span>
+    <span>Instagram</span>
+  </div>
+  <div class="footer-copy">&copy; 2026 CITROËN JAPON. All rights reserved.</div>
+</footer>
+
+<!-- ===== フローティングCTA ===== -->
+<div class="floating-cta">
+  <p>CITROËN C5 AIRCROSS RECOVERY DRIVE</p>
+  <a href="#" class="cta-btn">試乗予約 →</a>
+</div>
+
+</body>
+</html>

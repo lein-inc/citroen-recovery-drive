@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RECOVERY DRIVE — Hero Animation</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #fff; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+let W, H;
+
+function resize() {
+  W = innerWidth; H = innerHeight;
+  cvs.width = W * dpr; cvs.height = H * dpr;
+  cvs.style.width = W + 'px'; cvs.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize();
+
+/* ============================
+   Map Data
+   ============================ */
+const BOUNDS = { latMin: 35.45, latMax: 37.0, lngMin: 139.35, lngMax: 141.1 };
+
+// Route with stops and waypoints
+const ROUTE = [
+  { lat: 35.72, lng: 139.77, stop: 1,  name: 'HAGISO',              city: 'Yanaka' },
+  { lat: 35.71, lng: 139.73, stop: 2,  name: 'Tokyo Cathedral',     city: 'Sekiguchi' },
+  { lat: 35.74, lng: 139.85 },
+  { lat: 35.84, lng: 139.97 },
+  { lat: 35.98, lng: 140.03 },
+  { lat: 36.08, lng: 140.08, stop: 3,  name: 'cox / Shingoster',    city: 'Tsukuba' },
+  { lat: 36.18, lng: 140.20 },
+  { lat: 36.26, lng: 140.35 },
+  { lat: 36.34, lng: 140.45, stop: 4,  name: 'Soba Masa',           city: 'Mito' },
+  { lat: 36.36, lng: 140.47, stop: 5,  name: 'Art Tower Mito',      city: 'Mito' },
+  { lat: 36.38, lng: 140.44, stop: 6,  name: 'Suzuki Mohei Shoten', city: 'Mito' },
+  { lat: 36.39, lng: 140.49 },
+  { lat: 36.40, lng: 140.53, stop: 7,  name: 'Saza Coffee',         city: 'Hitachinaka' },
+  { lat: 36.43, lng: 140.51 },
+  { lat: 36.46, lng: 140.49, stop: 8,  name: 'Kiuchi Brewery',      city: 'Naka' },
+  { lat: 36.52, lng: 140.56 },
+  { lat: 36.56, lng: 140.60 },
+  { lat: 36.60, lng: 140.65, stop: 9,  name: 'Hitachi Station',     city: 'Hitachi' },
+  { lat: 36.61, lng: 140.66, stop: 10, name: 'Yamabungyo',          city: 'Hitachi' },
+  { lat: 36.66, lng: 140.69 },
+  { lat: 36.73, lng: 140.73 },
+  { lat: 36.80, lng: 140.76, stop: 11, name: 'Satoomitei',          city: 'Kitaibaraki' },
+];
+
+// Simplified Pacific coastline
+const COAST = [
+  { lat: 35.30, lng: 140.95 },
+  { lat: 35.55, lng: 140.90 },
+  { lat: 35.73, lng: 140.86 },
+  { lat: 35.90, lng: 140.68 },
+  { lat: 36.10, lng: 140.62 },
+  { lat: 36.25, lng: 140.60 },
+  { lat: 36.35, lng: 140.58 },
+  { lat: 36.42, lng: 140.62 },
+  { lat: 36.52, lng: 140.64 },
+  { lat: 36.60, lng: 140.68 },
+  { lat: 36.70, lng: 140.73 },
+  { lat: 36.80, lng: 140.80 },
+  { lat: 36.92, lng: 140.84 },
+  { lat: 37.10, lng: 140.88 },
+];
+
+// Lake Kasumigaura (simplified ellipse)
+const LAKE = { lat: 36.03, lng: 140.42, rLat: 0.15, rLng: 0.22 };
+
+/* ============================
+   Coordinate conversion
+   ============================ */
+function toXY(lat, lng) {
+  const pad = 50;
+  const x = (lng - BOUNDS.lngMin) / (BOUNDS.lngMax - BOUNDS.lngMin);
+  const y = 1 - (lat - BOUNDS.latMin) / (BOUNDS.latMax - BOUNDS.latMin);
+  return [pad + x * (W - 2*pad), pad + y * (H - 2*pad)];
+}
+
+/* ============================
+   Build smooth driving path
+   ============================ */
+let path = [], segs = [], totalLen = 0, stopPositions = [];
+
+function build() {
+  // Convert route to screen coords
+  const raw = ROUTE.map(p => toXY(p.lat, p.lng));
+
+  // Catmull-Rom smooth
+  path = smooth(raw, 10);
+
+  // Calculate segment lengths
+  segs = [];
+  totalLen = 0;
+  for (let i = 1; i < path.length; i++) {
+    const l = Math.hypot(path[i][0] - path[i-1][0], path[i][1] - path[i-1][1]);
+    segs.push(l);
+    totalLen += l;
+  }
+
+  // Store stop screen positions
+  stopPositions = ROUTE.filter(p => p.stop).map(p => ({
+    ...p,
+    xy: toXY(p.lat, p.lng),
+  }));
+}
+
+function smooth(p, n) {
+  if (p.length < 3) return [...p];
+  const r = [];
+  for (let i = 0; i < p.length - 1; i++) {
+    const a = p[Math.max(0, i-1)];
+    const b = p[i];
+    const c = p[Math.min(p.length-1, i+1)];
+    const d = p[Math.min(p.length-1, i+2)];
+    for (let j = 0; j < n; j++) {
+      const t = j/n, t2 = t*t, t3 = t2*t;
+      r.push([
+        .5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),
+        .5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3),
+      ]);
+    }
+  }
+  r.push(p[p.length - 1]);
+  return r;
+}
+
+function atDist(d) {
+  // Ping-pong: go forward then backward
+  const cycle = totalLen * 2;
+  d = d % cycle;
+  if (d > totalLen) d = cycle - d; // reverse
+
+  let acc = 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (acc + segs[i] >= d) {
+      const t = (d - acc) / segs[i];
+      return {
+        x: path[i][0] + (path[i+1][0]-path[i][0]) * t,
+        y: path[i][1] + (path[i+1][1]-path[i][1]) * t,
+        a: Math.atan2(path[i+1][1]-path[i][1], path[i+1][0]-path[i][0]),
+      };
+    }
+    acc += segs[i];
+  }
+  return { x: path[path.length-1][0], y: path[path.length-1][1], a: 0 };
+}
+
+/* ============================
+   Draw map background
+   ============================ */
+function drawMap() {
+  // Sea (right of coastline)
+  const coastXY = COAST.map(p => toXY(p.lat, p.lng));
+  ctx.beginPath();
+  ctx.moveTo(coastXY[0][0], H + 10);
+  for (const [cx, cy] of coastXY) ctx.lineTo(cx, cy);
+  ctx.lineTo(coastXY[coastXY.length-1][0], -10);
+  ctx.lineTo(W + 10, -10);
+  ctx.lineTo(W + 10, H + 10);
+  ctx.closePath();
+  ctx.fillStyle = '#eef3f8';
+  ctx.fill();
+
+  // Coastline
+  ctx.beginPath();
+  ctx.moveTo(coastXY[0][0], coastXY[0][1]);
+  for (let i = 1; i < coastXY.length; i++) ctx.lineTo(coastXY[i][0], coastXY[i][1]);
+  ctx.strokeStyle = '#cdd8e4';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Lake Kasumigaura
+  const lc = toXY(LAKE.lat, LAKE.lng);
+  const lr = toXY(LAKE.lat + LAKE.rLat, LAKE.lng + LAKE.rLng);
+  const rx = Math.abs(lr[0] - lc[0]);
+  const ry = Math.abs(lr[1] - lc[1]);
+  ctx.beginPath();
+  ctx.ellipse(lc[0], lc[1], rx, ry, -0.3, 0, Math.PI * 2);
+  ctx.fillStyle = '#e8eff6';
+  ctx.fill();
+
+  // Route line (full, subtle)
+  ctx.beginPath();
+  ctx.moveTo(path[0][0], path[0][1]);
+  for (let i = 1; i < path.length; i++) ctx.lineTo(path[i][0], path[i][1]);
+  ctx.strokeStyle = '#d0d0d0';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([8, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // City labels (major)
+  ctx.font = '11px "Montserrat", sans-serif';
+  ctx.fillStyle = '#bbb';
+  ctx.textAlign = 'left';
+  const cities = [
+    { lat: 35.68, lng: 139.69, label: 'TOKYO' },
+    { lat: 36.08, lng: 139.95, label: 'TSUKUBA' },
+    { lat: 36.34, lng: 140.35, label: 'MITO' },
+    { lat: 36.60, lng: 140.55, label: 'HITACHI' },
+    { lat: 36.82, lng: 140.65, label: 'KITAIBARAKI' },
+  ];
+  for (const c of cities) {
+    const [cx, cy] = toXY(c.lat, c.lng);
+    ctx.fillText(c.label, cx, cy);
+  }
+}
+
+/* ============================
+   Draw stop markers
+   ============================ */
+function drawStops() {
+  for (const s of stopPositions) {
+    const [x, y] = s.xy;
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#222';
+    ctx.fill();
+
+    // Number
+    ctx.font = 'bold 9px "Montserrat", sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(s.stop, x, y + 0.5);
+
+    // Name label
+    ctx.font = '10px "Montserrat", sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(s.name, x + 9, y - 5);
+  }
+}
+
+/* ============================
+   Draw route progress (driven portion)
+   ============================ */
+function drawDrivenRoute(carDist) {
+  // Normalize for ping-pong
+  const cycle = totalLen * 2;
+  let d = carDist % cycle;
+  const reverse = d > totalLen;
+  if (reverse) d = cycle - d;
+
+  // Find how many path points we've passed
+  let acc = 0, endIdx = 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (acc + segs[i] >= d) { endIdx = i; break; }
+    acc += segs[i];
+    endIdx = i;
+  }
+
+  ctx.beginPath();
+  if (reverse) {
+    ctx.moveTo(path[path.length-1][0], path[path.length-1][1]);
+    for (let i = path.length-2; i >= endIdx; i--) ctx.lineTo(path[i][0], path[i][1]);
+  } else {
+    ctx.moveTo(path[0][0], path[0][1]);
+    for (let i = 1; i <= endIdx + 1 && i < path.length; i++) ctx.lineTo(path[i][0], path[i][1]);
+  }
+  ctx.strokeStyle = 'rgba(30,30,30,.35)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+/* ============================
+   Draw top-down C5 AIRCROSS
+   ============================ */
+function drawCar(x, y, angle) {
+  const s = Math.min(W, H) * .014;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,.12)';
+  ctx.beginPath();
+  ctx.ellipse(2, 2, s*1.1, s*.55, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Body
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.moveTo(-s, -s*.4);
+  ctx.lineTo(s*.65, -s*.43);
+  ctx.quadraticCurveTo(s*1.02, -s*.28, s*1.05, 0);
+  ctx.quadraticCurveTo(s*1.02, s*.28, s*.65, s*.43);
+  ctx.lineTo(-s, s*.4);
+  ctx.quadraticCurveTo(-s*1.08, 0, -s, -s*.4);
+  ctx.fill();
+
+  // Roof
+  ctx.fillStyle = '#555';
+  ctx.beginPath();
+  ctx.moveTo(-s*.4, -s*.26);
+  ctx.lineTo(s*.4, -s*.28);
+  ctx.quadraticCurveTo(s*.55, 0, s*.4, s*.28);
+  ctx.lineTo(-s*.4, s*.26);
+  ctx.quadraticCurveTo(-s*.5, 0, -s*.4, -s*.26);
+  ctx.fill();
+
+  // Windshield
+  ctx.fillStyle = '#888';
+  ctx.fillRect(s*.28, -s*.24, s*.18, s*.48);
+
+  // Wheels
+  ctx.fillStyle = '#111';
+  [[-s*.58,-s*.48],[- s*.58,s*.38],[s*.34,-s*.5],[s*.34,s*.4]].forEach(([wx,wy]) => {
+    ctx.fillRect(wx, wy, s*.2, s*.1);
+  });
+
+  // Headlights
+  ctx.fillStyle = '#ffe';
+  ctx.beginPath();
+  ctx.ellipse(s*.98, -s*.2, s*.06, s*.05, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(s*.98,  s*.2, s*.06, s*.05, 0, 0, Math.PI*2); ctx.fill();
+
+  // Taillights
+  ctx.fillStyle = '#c33';
+  ctx.fillRect(-s*.98, -s*.24, s*.07, s*.07);
+  ctx.fillRect(-s*.98,  s*.17, s*.07, s*.07);
+
+  ctx.restore();
+}
+
+/* ============================
+   Draw title overlay
+   ============================ */
+function drawTitle() {
+  const fs = Math.min(W * .065, H * .15);
+  ctx.font = `900 ${fs}px Montserrat, "Arial Black", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Title (single line)
+  ctx.fillStyle = 'rgba(0,0,0,.85)';
+  ctx.fillText('RECOVERY DRIVE', W/2, H * .45);
+
+  // Subtitle
+  ctx.font = '700 12px Montserrat, sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,.2)';
+  ctx.fillText('CITROËN C5 AIRCROSS', W/2, H * .70);
+}
+
+/* ============================
+   Animation
+   ============================ */
+let dist = 0, lastT = 0;
+
+function frame(t) {
+  requestAnimationFrame(frame);
+  if (!lastT) lastT = t;
+  const dt = Math.min(t - lastT, 50);
+  lastT = t;
+  if (!totalLen) return;
+
+  // Speed: full path in ~45s (one way), ping-pong
+  dist += (totalLen / 45) * dt / 1000;
+  const car = atDist(dist);
+
+  // Clear
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Map
+  drawMap();
+  drawDrivenRoute(dist);
+  drawStops();
+
+  // Title
+  drawTitle();
+
+  // Car
+  drawCar(car.x, car.y, car.a);
+}
+
+window.addEventListener('resize', () => { resize(); build(); });
+document.fonts.ready.then(() => { build(); requestAnimationFrame(frame); });
+</script>
+</body>
+</html>

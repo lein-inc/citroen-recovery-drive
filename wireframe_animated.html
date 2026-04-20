@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C5 AIRCROSS リカバリードライブ｜LP ワイヤーフレーム（アニメーション版）</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #222;
+    background: #fff;
+    line-height: 1.7;
+  }
+
+  /* ===== 共通 ===== */
+  .section { padding: 64px 24px; max-width: 960px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .section-sub {
+    font-size: 14px;
+    color: #666;
+    max-width: 560px;
+    line-height: 1.8;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: #222;
+    color: #fff;
+    padding: 14px 40px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .cta-btn-outline {
+    background: transparent;
+    border: 1px solid #666;
+    color: #666;
+  }
+
+  .note {
+    display: none;
+  }
+
+  .placeholder {
+    background: #eee;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+  }
+
+  /* ===== ナビ ===== */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 56px;
+  }
+  .nav-logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .nav-cta {
+    background: #222;
+    color: #fff;
+    padding: 8px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ===== ヒーロー ===== */
+  .hero {
+    height: calc(100vh - 56px);
+    margin-top: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-overlay {
+    position: absolute;
+    bottom: 24px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hero-overlay .cta-btn {
+    pointer-events: auto;
+  }
+
+  /* ===== リード ===== */
+  .lead {
+    text-align: center;
+    padding: 80px 24px;
+  }
+  .lead-text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 2.2;
+    max-width: 520px;
+    margin: 0 auto;
+    color: #333;
+  }
+  .lead-text em {
+    font-style: normal;
+    font-weight: 600;
+    border-bottom: 1px solid #222;
+  }
+
+  /* ===== 快適性 ===== */
+  .comfort-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 960px;
+    margin: 40px auto 0;
+  }
+  .comfort-card {
+    text-align: center;
+    padding: 32px 16px;
+    border: 1px solid #ddd;
+  }
+  .comfort-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #eee;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #999;
+  }
+  .comfort-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .comfort-card .sub {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #999;
+    margin-bottom: 12px;
+  }
+  .comfort-card p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.8;
+  }
+
+  /* ===== コース ===== */
+  .courses { max-width: 960px; margin: 0 auto; padding: 64px 24px; }
+  .course-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 40px;
+  }
+  .course-tab {
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: #999;
+  }
+  .course-tab.active {
+    color: #222;
+    border-bottom-color: #222;
+  }
+
+  .course-hero {
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+  }
+  .course-hero-map {
+    height: 480px;
+  }
+  .course-hero-info {
+    background: #f5f5f5;
+    padding: 32px 40px;
+  }
+  .course-hero-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .course-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .course-meta span {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+  }
+  .course-hero-info p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #666;
+  }
+
+  .course-timeline { max-width: 700px; margin: 0 auto; }
+  .spot {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .spot-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .spot-num.stay { background: #666; }
+  .spot-body h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .spot-genre {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 6px;
+  }
+  .spot-body p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .spot-talk {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #555;
+  }
+  .spot-drive {
+    text-align: center;
+    padding: 8px;
+    font-size: 11px;
+    color: #bbb;
+  }
+
+  /* ===== オーナーの声 ===== */
+  .voices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 960px;
+    margin: 40px auto 0;
+  }
+  .voice-card {
+    border: 1px solid #ddd;
+  }
+  .voice-photo {
+    height: 160px;
+  }
+  .voice-body { padding: 20px; }
+  .voice-body h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .voice-body .age {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 10px;
+  }
+  .voice-body blockquote {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #555;
+    border-left: 2px solid #ccc;
+    padding-left: 10px;
+    margin: 0;
+  }
+
+  /* ===== スペック ===== */
+  .spec-section {
+    background: #f5f5f5;
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 800px;
+    margin: 40px auto 0;
+  }
+  .spec-card {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .spec-card h4 {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  .spec-card .grade {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .spec-card .price {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .spec-card .price span { font-size: 12px; font-weight: 400; }
+  .spec-card ul {
+    list-style: none;
+    text-align: left;
+    font-size: 12px;
+    line-height: 2;
+    color: #666;
+  }
+  .spec-card ul li::before {
+    content: '- ';
+    color: #ccc;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    padding: 80px 24px;
+    text-align: center;
+  }
+
+  /* ===== フッター ===== */
+  .footer {
+    background: #222;
+    color: #fff;
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .footer-logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 16px;
+  }
+  .footer-copy {
+    font-size: 10px;
+    color: #555;
+  }
+
+  /* ===== フローティングCTA ===== */
+  .floating-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #222;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 99;
+  }
+  .floating-cta p {
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .floating-cta .cta-btn { padding: 10px 28px; font-size: 12px; background: #555; }
+
+  /* ===== ワイヤーバッジ ===== */
+  .wire-badge {
+    display: none;
+  }
+
+  /* ===== レスポンシブ ===== */
+  @media (max-width: 768px) {
+    .comfort-grid, .voices-grid { grid-template-columns: 1fr; }
+    .course-hero-map { height: 320px; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .course-tabs { overflow-x: auto; }
+    .course-tab { white-space: nowrap; padding: 10px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wire-badge">WIREFRAME v2.0 — ANIMATED</div>
+
+<!-- ===== ナビ ===== -->
+<nav class="nav">
+  <div class="nav-logo">CITROËN C5 AIRCROSS</div>
+  <button class="nav-cta">試乗予約 →</button>
+</nav>
+
+<!-- ===== 1. ヒーロー（アニメーション） ===== -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-overlay">
+    <a href="#cta" class="cta-btn">試乗予約はこちら →</a>
+  </div>
+</section>
+
+<!-- ===== 2. リード ===== -->
+<section class="lead">
+  <p class="lead-text">
+    揺れない。疲れない。だから、<em>会話が続く</em>。<br>
+    C5 AIRCROSSの快適性が、<br>
+    いつものドライブを少し特別にします。
+  </p>
+  <div class="note">演出メモ: スクロールに合わせてフェードイン。余白多め。</div>
+</section>
+
+<!-- ===== 3. 快適性 ===== -->
+<section style="background:#f5f5f5;">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">WHY C5 AIRCROSS?</div>
+    <h2 class="section-title">長く走っても、疲れない理由。</h2>
+    <p class="section-sub" style="margin:0 auto;">
+      C5 AIRCROSSの3つのテクノロジーが、ドライブの快適さを変えます。
+    </p>
+
+    <div class="comfort-grid">
+      <div class="comfort-card">
+        <div class="comfort-icon">PHC</div>
+        <h3>PHC®</h3>
+        <div class="sub">PROGRESSIVE HYDRAULIC CUSHION</div>
+        <p>路面の凹凸を油圧で吸収する独自のサスペンション。段差を超えても、車内は揺れません。</p>
+      </div>
+      <div class="comfort-card">
+        <div class="comfort-icon">SEAT</div>
+        <h3>アドバンストコンフォートシート</h3>
+        <div class="sub">ADVANCED COMFORT SEATS</div>
+        <p>多層フォームが体圧を分散。運転席も助手席も、長時間座っていたくなる座り心地。</p>
+      </div>
+      <div class="comfort-card">
+        <div class="comfort-icon">48V</div>
+        <h3>静粛性 × 48Vハイブリッド</h3>
+        <div class="sub">48V HYBRID SYSTEM</div>
+        <p>市街地の約50%をEVモードで走行。静かな車内で、音楽も会話もクリアに。</p>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <a href="#cta" class="cta-btn">この乗り心地を体感する →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. ドライブコース ===== -->
+<section class="courses" id="courses">
+  <div style="text-align:center; margin-bottom:16px;">
+    <div class="section-label">RECOVERY DRIVE COURSES</div>
+    <h2 class="section-title">おすすめドライブコース</h2>
+    <p class="section-sub" style="margin:0 auto;">
+      C5 AIRCROSSで走りたい、厳選ルートをご紹介します。
+    </p>
+  </div>
+
+  <div class="course-tabs">
+    <div class="course-tab active">コース1　東京→茨城</div>
+    <div class="course-tab">コース2　（準備中）</div>
+    <div class="course-tab">コース3　（準備中）</div>
+  </div>
+
+  <!-- コース監修者 -->
+  <div style="display:flex; gap:24px; align-items:center; border:1px solid #ddd; padding:24px 28px; margin-bottom:40px;">
+    <div class="placeholder" style="width:100px; height:100px; border-radius:50%; flex-shrink:0;">写真</div>
+    <div>
+      <div style="font-size:10px; letter-spacing:2px; color:#999; margin-bottom:4px;">COURSE DIRECTOR</div>
+      <h4 style="font-size:15px; font-weight:700; margin-bottom:4px;">神藤 秀人</h4>
+      <div style="font-size:11px; color:#999; margin-bottom:8px;">d design travel 編集長</div>
+      <p style="font-size:13px; color:#666; line-height:1.8; margin:0;">「その土地らしさ」を伝えるトラベルガイド『d design travel』編集長。47都道府県をくまなく取材し、ロングライフデザインの視点で日本各地の魅力を発信し続けている。今回のリカバリードライブコースでは、建築・クラフト・食を軸に、ドライブだからこそ出会える茨城の「らしさ」を選定。</p>
+    </div>
+  </div>
+
+  <div class="course-hero">
+    <div class="course-hero-map placeholder" style="height:480px;">
+      Googleマイマップ埋め込み（iframe）
+    </div>
+    <div class="course-hero-info">
+      <div class="course-meta">
+        <span>1泊2日</span>
+        <span>約250km</span>
+        <span>11スポット</span>
+      </div>
+      <h3>アート＆建築の旅　東京 → 茨城</h3>
+      <p>谷中の朝から始まり、丹下健三、磯崎新、妹島和世の建築を巡りながら、クラフトと食を楽しむ1泊2日。PHCサスペンションが常磐道の路面変化を吸収し、250km走っても疲れません。</p>
+    </div>
+  </div>
+
+  <div class="course-timeline">
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>HAGISO</h4>
+        <div class="spot-genre">宿泊 / カフェ — 台東区谷中</div>
+        <p>築60年の木造アパートをリノベした複合施設。HAGI CAFEでモーニングから旅をスタート。</p>
+        <div class="spot-talk">会話のきっかけ：「こういう宿、初めてだね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+
+    <div class="spot">
+      <div class="spot-num">2</div>
+      <div class="spot-body">
+        <h4>東京カテドラル聖マリア大聖堂</h4>
+        <div class="spot-genre">建築 — 文京区関口</div>
+        <p>丹下健三の代表作。ステンレスの外装と十字架型の平面構成。</p>
+        <div class="spot-talk">「この建築、どう思う？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+
+    <div class="spot">
+      <div class="spot-num">3</div>
+      <div class="spot-body">
+        <h4>cox / Shingoster LIVING</h4>
+        <div class="spot-genre">ギャラリー / カフェ — つくば市</div>
+        <p>宇宙船のようなコンクリート建築と古民家が隣接。笠間の作家・小林東洋氏の器。</p>
+        <div class="spot-talk">「こういう器、家にも欲しいね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+
+    <div class="spot">
+      <div class="spot-num">4</div>
+      <div class="spot-body">
+        <h4>そばまさ</h4>
+        <div class="spot-genre">食事 — 水戸市</div>
+        <p>地元で愛される手打ち蕎麦。名物「つけけんちん」は売り切れ注意。</p>
+        <div class="spot-talk">「やっぱり手打ちは違うね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">5</div>
+      <div class="spot-body">
+        <h4>水戸芸術館</h4>
+        <div class="spot-genre">建築 / 美術 — 水戸市</div>
+        <p>磯崎新設計。らせん状のシンボルタワーから水戸を一望。</p>
+        <div class="spot-talk">「上から見る街って新鮮だね」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">6</div>
+      <div class="spot-body">
+        <h4>鈴木茂兵衛商店</h4>
+        <div class="spot-genre">工芸 — 水戸市</div>
+        <p>慶応元年創業。伝統の水府提灯をモダンにアップデート。</p>
+        <div class="spot-talk">「これ、リビングに飾りたい」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+
+    <div class="spot">
+      <div class="spot-num">7</div>
+      <div class="spot-body">
+        <h4>サザコーヒー 本店</h4>
+        <div class="spot-genre">カフェ — ひたちなか市</div>
+        <p>スペシャルティコーヒーの名店。将軍コーヒーが人気。</p>
+        <div class="spot-talk">「次の旅のこと、考えない？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+
+    <div class="spot">
+      <div class="spot-num">8</div>
+      <div class="spot-body">
+        <h4>木内酒造</h4>
+        <div class="spot-genre">酒蔵 — 那珂市</div>
+        <p>1823年創業。常陸野ネストビールで知られる酒蔵。見学・試飲可。</p>
+        <div class="spot-talk">「お土産、何にする？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+
+    <div class="spot">
+      <div class="spot-num">9</div>
+      <div class="spot-body">
+        <h4>日立駅</h4>
+        <div class="spot-genre">建築 — 日立市</div>
+        <p>妹島和世設計。海に面したガラス張りの駅舎。展望台としても。</p>
+        <div class="spot-talk">「駅なのに、こんな景色なんだ」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約2分</div>
+
+    <div class="spot">
+      <div class="spot-num">10</div>
+      <div class="spot-body">
+        <h4>山文魚</h4>
+        <div class="spot-genre">食事 — 日立市</div>
+        <p>割烹着の女将がもてなす魚料理店。あんこう鍋が絶品。</p>
+        <div class="spot-talk">「今日一番おいしかったもの、何？」</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約40分</div>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>里海邸 金波楼本邸</h4>
+        <div class="spot-genre">宿泊 — 北茨城市</div>
+        <p>明治創業の旅館再生。海と一体化する空間。焼き魚の朝食が忘れられない。</p>
+        <div class="spot-talk">「明日、どこ行こうか」</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin:28px 0 16px;">DAY 2</h3>
+    <div class="spot">
+      <div class="spot-num" style="background:#999;">→</div>
+      <div class="spot-body">
+        <h4>笠間・益子方面へ</h4>
+        <div class="spot-genre">陶芸の街へ</div>
+        <p>詳細は近日公開予定。</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="#cta" class="cta-btn">C5 AIRCROSSを試乗する →</a>
+  </div>
+</section>
+
+<!-- ===== 5. オーナーの声 ===== -->
+<section style="background:#f5f5f5;">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">VOICES</div>
+    <h2 class="section-title">オーナーの声</h2>
+
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="height:160px;">写真</div>
+        <div class="voice-body">
+          <h4>T.K. さん</h4>
+          <div class="age">40代 / 茨城コース体験</div>
+          <blockquote>以前の車だと長距離は疲れて無言になりがちだったけど、C5だと不思議と会話が続く。乗り心地の違いってこういうことかと実感しました。</blockquote>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="height:160px;">写真</div>
+        <div class="voice-body">
+          <h4>M.S. さん</h4>
+          <div class="age">30代 / 週末ドライブ派</div>
+          <blockquote>助手席でも全然疲れないって妻に言われたのが嬉しかった。おかげで週末ドライブの頻度が増えました。</blockquote>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-photo placeholder" style="height:160px;">写真</div>
+        <div class="voice-body">
+          <h4>R.N. さん</h4>
+          <div class="age">50代 / 1泊旅行好き</div>
+          <blockquote>帰りの車で「次はどこ行こうか」って話になる。ドライブ自体が楽しみになったのは、この車に替えてからですね。</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="max-width:640px; margin:24px auto 0;">制作メモ: 実際のオーナーインタビュー or モニター体験談を取材。</div>
+  </div>
+</section>
+
+<!-- ===== 6. スペック ===== -->
+<section class="spec-section">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">LINEUP</div>
+    <h2 class="section-title">C5 AIRCROSS HYBRID</h2>
+
+    <div class="spec-grid">
+      <div class="spec-card">
+        <h4>GRADE</h4>
+        <div class="grade">PLUS HYBRID</div>
+        <div class="price">¥5,350,000<span>〜</span></div>
+        <ul>
+          <li>PHC® サスペンション</li>
+          <li>アドバンストコンフォートシート</li>
+          <li>48V ハイブリッドシステム</li>
+          <li>ワイヤレススマートフォンチャージ</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>GRADE</h4>
+        <div class="grade">MAX HYBRID</div>
+        <div class="price">¥5,700,000<span>〜</span></div>
+        <ul>
+          <li>PLUS HYBRID 全装備 +</li>
+          <li>LEDマトリクスヘッドライト</li>
+          <li>ヘッドアップディスプレイ</li>
+          <li>パノラミックサンルーフ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <a href="#" class="cta-btn cta-btn-outline">詳しいスペックを見る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. 試乗CTA ===== -->
+<section class="cta-section" id="cta">
+  <div class="section-label">TEST DRIVE</div>
+  <h2 class="section-title">まずは、乗り心地を体感してください。</h2>
+  <p class="section-sub" style="margin:0 auto 32px;">
+    お近くのシトロエンディーラーで試乗いただけます。
+  </p>
+  <a href="#" class="cta-btn" style="padding:18px 56px; font-size:15px;">試乗を予約する →</a>
+  <div class="note" style="max-width:480px; margin:24px auto 0;">実装メモ: ボタンクリックでシトロエン公式の試乗予約ページへ遷移（別タブ）</div>
+</section>
+
+<!-- ===== 8. フッター ===== -->
+<footer class="footer">
+  <div class="footer-logo">CITROËN</div>
+  <div class="footer-links">
+    <span>公式サイト</span>
+    <span>ディーラー検索</span>
+    <span>カタログ請求</span>
+    <span>Instagram</span>
+  </div>
+  <div class="footer-copy">&copy; 2026 CITROËN JAPON. All rights reserved.</div>
+</footer>
+
+<!-- ===== フローティングCTA ===== -->
+<div class="floating-cta">
+  <p>CITROËN C5 AIRCROSS RECOVERY DRIVE</p>
+  <a href="#" class="cta-btn">試乗予約 →</a>
+</div>
+
+<!-- ===== ヒーローアニメーション ===== -->
+<script>
+const cvs = document.getElementById('heroCanvas');
+const ctx = cvs.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+const heroEl = document.getElementById('hero');
+let W, H;
+
+function resize() {
+  W = heroEl.clientWidth;
+  H = heroEl.clientHeight;
+  cvs.width = W * dpr;
+  cvs.height = H * dpr;
+  cvs.style.width = W + 'px';
+  cvs.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize();
+
+/* ============================
+   Map Data
+   ============================ */
+const BOUNDS = { latMin: 35.45, latMax: 37.0, lngMin: 139.35, lngMax: 141.1 };
+
+const ROUTE = [
+  { lat: 35.72, lng: 139.77, stop: 1,  name: 'HAGISO',              city: 'Yanaka' },
+  { lat: 35.71, lng: 139.73, stop: 2,  name: 'Tokyo Cathedral',     city: 'Sekiguchi' },
+  { lat: 35.74, lng: 139.85 },
+  { lat: 35.84, lng: 139.97 },
+  { lat: 35.98, lng: 140.03 },
+  { lat: 36.08, lng: 140.08, stop: 3,  name: 'cox / Shingoster',    city: 'Tsukuba' },
+  { lat: 36.18, lng: 140.20 },
+  { lat: 36.26, lng: 140.35 },
+  { lat: 36.34, lng: 140.45, stop: 4,  name: 'Soba Masa',           city: 'Mito' },
+  { lat: 36.36, lng: 140.47, stop: 5,  name: 'Art Tower Mito',      city: 'Mito' },
+  { lat: 36.38, lng: 140.44, stop: 6,  name: 'Suzuki Mohei Shoten', city: 'Mito' },
+  { lat: 36.39, lng: 140.49 },
+  { lat: 36.40, lng: 140.53, stop: 7,  name: 'Saza Coffee',         city: 'Hitachinaka' },
+  { lat: 36.43, lng: 140.51 },
+  { lat: 36.46, lng: 140.49, stop: 8,  name: 'Kiuchi Brewery',      city: 'Naka' },
+  { lat: 36.52, lng: 140.56 },
+  { lat: 36.56, lng: 140.60 },
+  { lat: 36.60, lng: 140.65, stop: 9,  name: 'Hitachi Station',     city: 'Hitachi' },
+  { lat: 36.61, lng: 140.66, stop: 10, name: 'Yamabungyo',          city: 'Hitachi' },
+  { lat: 36.66, lng: 140.69 },
+  { lat: 36.73, lng: 140.73 },
+  { lat: 36.80, lng: 140.76, stop: 11, name: 'Satoomitei',          city: 'Kitaibaraki' },
+];
+
+const COAST = [
+  { lat: 35.30, lng: 140.95 },
+  { lat: 35.55, lng: 140.90 },
+  { lat: 35.73, lng: 140.86 },
+  { lat: 35.90, lng: 140.68 },
+  { lat: 36.10, lng: 140.62 },
+  { lat: 36.25, lng: 140.60 },
+  { lat: 36.35, lng: 140.58 },
+  { lat: 36.42, lng: 140.62 },
+  { lat: 36.52, lng: 140.64 },
+  { lat: 36.60, lng: 140.68 },
+  { lat: 36.70, lng: 140.73 },
+  { lat: 36.80, lng: 140.80 },
+  { lat: 36.92, lng: 140.84 },
+  { lat: 37.10, lng: 140.88 },
+];
+
+const LAKE = { lat: 36.03, lng: 140.42, rLat: 0.15, rLng: 0.22 };
+
+/* ============================
+   Coordinate conversion
+   ============================ */
+function toXY(lat, lng) {
+  const pad = 30;
+  const x = (lng - BOUNDS.lngMin) / (BOUNDS.lngMax - BOUNDS.lngMin);
+  const y = 1 - (lat - BOUNDS.latMin) / (BOUNDS.latMax - BOUNDS.latMin);
+  return [pad + x * (W - 2*pad), pad + y * (H - 2*pad)];
+}
+
+/* ============================
+   Build smooth driving path
+   ============================ */
+let path = [], segs = [], totalLen = 0, stopPositions = [];
+
+function build() {
+  const raw = ROUTE.map(p => toXY(p.lat, p.lng));
+  path = smooth(raw, 10);
+  segs = [];
+  totalLen = 0;
+  for (let i = 1; i < path.length; i++) {
+    const l = Math.hypot(path[i][0] - path[i-1][0], path[i][1] - path[i-1][1]);
+    segs.push(l);
+    totalLen += l;
+  }
+  stopPositions = ROUTE.filter(p => p.stop).map(p => ({
+    ...p,
+    xy: toXY(p.lat, p.lng),
+  }));
+}
+
+function smooth(p, n) {
+  if (p.length < 3) return [...p];
+  const r = [];
+  for (let i = 0; i < p.length - 1; i++) {
+    const a = p[Math.max(0, i-1)];
+    const b = p[i];
+    const c = p[Math.min(p.length-1, i+1)];
+    const d = p[Math.min(p.length-1, i+2)];
+    for (let j = 0; j < n; j++) {
+      const t = j/n, t2 = t*t, t3 = t2*t;
+      r.push([
+        .5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),
+        .5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3),
+      ]);
+    }
+  }
+  r.push(p[p.length - 1]);
+  return r;
+}
+
+function atDist(d) {
+  const cycle = totalLen * 2;
+  d = d % cycle;
+  if (d > totalLen) d = cycle - d;
+  let acc = 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (acc + segs[i] >= d) {
+      const t = (d - acc) / segs[i];
+      return {
+        x: path[i][0] + (path[i+1][0]-path[i][0]) * t,
+        y: path[i][1] + (path[i+1][1]-path[i][1]) * t,
+        a: Math.atan2(path[i+1][1]-path[i][1], path[i+1][0]-path[i][0]),
+      };
+    }
+    acc += segs[i];
+  }
+  return { x: path[path.length-1][0], y: path[path.length-1][1], a: 0 };
+}
+
+/* ============================
+   Draw map background
+   ============================ */
+function drawMap() {
+  const coastXY = COAST.map(p => toXY(p.lat, p.lng));
+  ctx.beginPath();
+  ctx.moveTo(coastXY[0][0], H + 10);
+  for (const [cx, cy] of coastXY) ctx.lineTo(cx, cy);
+  ctx.lineTo(coastXY[coastXY.length-1][0], -10);
+  ctx.lineTo(W + 10, -10);
+  ctx.lineTo(W + 10, H + 10);
+  ctx.closePath();
+  ctx.fillStyle = '#eef3f8';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(coastXY[0][0], coastXY[0][1]);
+  for (let i = 1; i < coastXY.length; i++) ctx.lineTo(coastXY[i][0], coastXY[i][1]);
+  ctx.strokeStyle = '#cdd8e4';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  const lc = toXY(LAKE.lat, LAKE.lng);
+  const lr = toXY(LAKE.lat + LAKE.rLat, LAKE.lng + LAKE.rLng);
+  const rx = Math.abs(lr[0] - lc[0]);
+  const ry = Math.abs(lr[1] - lc[1]);
+  ctx.beginPath();
+  ctx.ellipse(lc[0], lc[1], rx, ry, -0.3, 0, Math.PI * 2);
+  ctx.fillStyle = '#e8eff6';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(path[0][0], path[0][1]);
+  for (let i = 1; i < path.length; i++) ctx.lineTo(path[i][0], path[i][1]);
+  ctx.strokeStyle = '#d0d0d0';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([8, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.font = '10px "Montserrat", sans-serif';
+  ctx.fillStyle = '#bbb';
+  ctx.textAlign = 'left';
+  const cities = [
+    { lat: 35.68, lng: 139.69, label: 'TOKYO' },
+    { lat: 36.08, lng: 139.95, label: 'TSUKUBA' },
+    { lat: 36.34, lng: 140.35, label: 'MITO' },
+    { lat: 36.60, lng: 140.55, label: 'HITACHI' },
+    { lat: 36.82, lng: 140.65, label: 'KITAIBARAKI' },
+  ];
+  for (const c of cities) {
+    const [cx, cy] = toXY(c.lat, c.lng);
+    ctx.fillText(c.label, cx, cy);
+  }
+}
+
+/* ============================
+   Draw stop markers
+   ============================ */
+function drawStops() {
+  for (const s of stopPositions) {
+    const [x, y] = s.xy;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#222';
+    ctx.fill();
+    ctx.font = 'bold 8px "Montserrat", sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(s.stop, x, y + 0.5);
+    ctx.font = '9px "Montserrat", sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(s.name, x + 7, y - 4);
+  }
+}
+
+/* ============================
+   Draw route progress
+   ============================ */
+function drawDrivenRoute(carDist) {
+  const cycle = totalLen * 2;
+  let d = carDist % cycle;
+  const reverse = d > totalLen;
+  if (reverse) d = cycle - d;
+  let acc = 0, endIdx = 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (acc + segs[i] >= d) { endIdx = i; break; }
+    acc += segs[i];
+    endIdx = i;
+  }
+  ctx.beginPath();
+  if (reverse) {
+    ctx.moveTo(path[path.length-1][0], path[path.length-1][1]);
+    for (let i = path.length-2; i >= endIdx; i--) ctx.lineTo(path[i][0], path[i][1]);
+  } else {
+    ctx.moveTo(path[0][0], path[0][1]);
+    for (let i = 1; i <= endIdx + 1 && i < path.length; i++) ctx.lineTo(path[i][0], path[i][1]);
+  }
+  ctx.strokeStyle = 'rgba(30,30,30,.35)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+/* ============================
+   Draw top-down C5 AIRCROSS
+   ============================ */
+function drawCar(x, y, angle) {
+  const s = Math.min(W, H) * .016;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.fillStyle = 'rgba(0,0,0,.12)';
+  ctx.beginPath();
+  ctx.ellipse(2, 2, s*1.1, s*.55, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.moveTo(-s, -s*.4);
+  ctx.lineTo(s*.65, -s*.43);
+  ctx.quadraticCurveTo(s*1.02, -s*.28, s*1.05, 0);
+  ctx.quadraticCurveTo(s*1.02, s*.28, s*.65, s*.43);
+  ctx.lineTo(-s, s*.4);
+  ctx.quadraticCurveTo(-s*1.08, 0, -s, -s*.4);
+  ctx.fill();
+  ctx.fillStyle = '#555';
+  ctx.beginPath();
+  ctx.moveTo(-s*.4, -s*.26);
+  ctx.lineTo(s*.4, -s*.28);
+  ctx.quadraticCurveTo(s*.55, 0, s*.4, s*.28);
+  ctx.lineTo(-s*.4, s*.26);
+  ctx.quadraticCurveTo(-s*.5, 0, -s*.4, -s*.26);
+  ctx.fill();
+  ctx.fillStyle = '#888';
+  ctx.fillRect(s*.28, -s*.24, s*.18, s*.48);
+  ctx.fillStyle = '#111';
+  [[-s*.58,-s*.48],[-s*.58,s*.38],[s*.34,-s*.5],[s*.34,s*.4]].forEach(([wx,wy]) => {
+    ctx.fillRect(wx, wy, s*.2, s*.1);
+  });
+  ctx.fillStyle = '#ffe';
+  ctx.beginPath();
+  ctx.ellipse(s*.98, -s*.2, s*.06, s*.05, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(s*.98,  s*.2, s*.06, s*.05, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#c33';
+  ctx.fillRect(-s*.98, -s*.24, s*.07, s*.07);
+  ctx.fillRect(-s*.98,  s*.17, s*.07, s*.07);
+  ctx.restore();
+}
+
+/* ============================
+   Draw title overlay
+   ============================ */
+function drawTitle() {
+  const fs = Math.min(W * .055, H * .14);
+  ctx.font = `900 ${fs}px Montserrat, "Arial Black", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(0,0,0,.85)';
+  ctx.fillText('RECOVERY DRIVE', W/2, H * .42);
+  ctx.font = '700 11px Montserrat, sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,.2)';
+  ctx.fillText('CITROËN C5 AIRCROSS', W/2, H * .58);
+}
+
+/* ============================
+   Animation
+   ============================ */
+let dist = 0, lastT = 0;
+
+function frame(t) {
+  requestAnimationFrame(frame);
+  if (!lastT) lastT = t;
+  const dt = Math.min(t - lastT, 50);
+  lastT = t;
+  if (!totalLen) return;
+  dist += (totalLen / 45) * dt / 1000;
+  const car = atDist(dist);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+  drawMap();
+  drawDrivenRoute(dist);
+  drawStops();
+  drawTitle();
+  drawCar(car.x, car.y, car.a);
+}
+
+window.addEventListener('resize', () => { resize(); build(); });
+document.fonts.ready.then(() => { build(); requestAnimationFrame(frame); });
+</script>
+
+</body>
+</html>
