@@ -83,6 +83,35 @@
     margin-top: 48px; padding-top: 24px; border-top: 1px solid #eee;
     font-size: 11px; color: #bbb;
   }
+
+  /* ===== アニメーション ===== */
+  .main h1, .main h2, .main .subtitle, .page-list, .footer-note {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.6s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .main h1 { animation-delay: 0s; }
+  .main h2 { animation-delay: 0.08s; }
+  .main .subtitle { animation-delay: 0.16s; }
+  .page-list { animation-delay: 0.28s; }
+  .footer-note { animation-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-item a { transition: background 0.2s; border-radius: 4px; padding: 16px 12px; margin: -16px -12px; }
+  .page-item a:hover { background: #f8f8f8; }
+
+  /* ===== バッジ改善 ===== */
+  .page-badge.latest {
+    border-color: #222; color: #222; font-weight: 800;
+  }
+
+  /* ===== 更新日 ===== */
+  .page-date {
+    font-size: 10px; color: #bbb; letter-spacing: 0.5px; margin-top: 2px;
+  }
 </style>
 </head>
 <body>
@@ -105,29 +134,9 @@
 
   <ul class="page-list">
     <li class="page-item">
-      <a href="wireframe.html">
+      <a href="wireframe_car_v2.html">
         <div>
-          <div class="page-name">ベースワイヤー <span class="page-badge">BASE</span></div>
-          <div class="page-desc">車両訴求メインのLP構成。モノクロシンプル。</div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_animated.html">
-        <div>
-          <div class="page-name">ベースワイヤー + ヒーローアニメーション</div>
-          <div class="page-desc">ベースワイヤーのヒーローにルートマップ走行アニメーションを埋め込み。</div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <!-- 夫婦リカバリー案: 非表示 -->
-    <li class="page-item">
-      <a href="wireframe_d-travel.html">
-        <div>
-          <div class="page-name">d design travel コラボ案 v1 <span class="page-badge">D TRAVEL</span></div>
-          <div class="page-desc">RECOVERY dRIVE — コース・旅をメインに訴求。神藤編集長コメント付きタイムライン。</div>
+          <div class="page-name">① 車を中心にした企画</div>
         </div>
         <span class="page-arrow">→</span>
       </a>
@@ -135,22 +144,33 @@
     <li class="page-item">
       <a href="wireframe_d-travel_v2.html">
         <div>
-          <div class="page-name">d design travel コラボ案 v2 <span class="page-badge">D TRAVEL v2</span></div>
-          <div class="page-desc">v1 + マルチロウカルーセルヒーロー + C5 AIRCROSS フィーチャー大型化。</div>
+          <div class="page-name">②-A d design travel編集長が旅コースを考える企画</div>
         </div>
         <span class="page-arrow">→</span>
       </a>
     </li>
-    <!-- ヒーローアニメーション単体: 非表示 -->
+    <li class="page-item">
+      <a href="wireframe_d-travel_v2_map.html">
+        <div>
+          <div class="page-name" style="padding-left:1em;">②-B d design travel編集長が旅コースを考える企画（マップ版）</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a href="wireframe_couple_v2.html">
+        <div>
+          <div class="page-name">③ 夫婦を中心にした企画</div>
+        </div>
+        <span class="page-arrow">→</span>
+      </a>
+    </li>
   </ul>
 
-  <div class="footer-note">
-    CITROËN C5 AIRCROSS RECOVERY DRIVE — Wireframes &copy; 2026
-  </div>
 </div>
 
 <script>
-const HASH = '44d6d784341500f18789faf75b0b8ca76106903b7f1ab3bac51c476427bd6aa4';
+const HASH = '2dc8343f93edbf586bc49d00a8b74510d868df41d8004aaf9215347336bc6f8e';
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
