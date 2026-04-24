@@ -112,6 +112,21 @@
   .page-date {
     font-size: 10px; color: #bbb; letter-spacing: 0.5px; margin-top: 2px;
   }
+
+  /* ===== グループ見出し ===== */
+  .group { margin-bottom: 48px; }
+  .group:last-child { margin-bottom: 0; }
+  .group-title {
+    font-size: 12px; font-weight: 800;
+    letter-spacing: 4px; color: #222;
+    padding-bottom: 10px; margin-bottom: 4px;
+    border-bottom: 2px solid #222;
+  }
+  .group-title .group-sub {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 1px; color: #999;
+    margin-left: 8px;
+  }
 </style>
 </head>
 <body>
@@ -132,56 +147,65 @@
   <h2>RECOVERY DRIVE</h2>
   <p class="subtitle">ワイヤーフレーム一覧</p>
 
-  <ul class="page-list">
-    <li class="page-item">
-      <a href="wireframe_car_v2.html">
-        <div>
-          <div class="page-name">① 車を中心にした企画</div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_d-travel_v2.html">
-        <div>
-          <div class="page-name">②-A d design travel編集長が旅コースを考える企画 <span class="page-badge">Ver1</span></div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_d-travel_v2_a.html">
-        <div>
-          <div class="page-name" style="padding-left:1em;">②-A d design travel編集長が旅コースを考える企画（A案：子育て一段落） <span class="page-badge latest">Ver2 A案</span></div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_d-travel_v2_b.html">
-        <div>
-          <div class="page-name" style="padding-left:1em;">②-A d design travel編集長が旅コースを考える企画（B案：デザインの目線） <span class="page-badge latest">Ver2 B案</span></div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_d-travel_v2_map.html">
-        <div>
-          <div class="page-name" style="padding-left:1em;">②-B d design travel編集長が旅コースを考える企画（マップ版）</div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-    <li class="page-item">
-      <a href="wireframe_couple_v2.html">
-        <div>
-          <div class="page-name">③ 夫婦を中心にした企画</div>
-        </div>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
-  </ul>
+  <div class="group">
+    <h3 class="group-title">VER 2 <span class="group-sub">最新調整反映版</span></h3>
+    <ul class="page-list">
+      <li class="page-item">
+        <a href="wireframe_d-travel_v2_a.html">
+          <div>
+            <div class="page-name">②-A d design travel編集長が旅コースを考える企画（A案：子育て一段落）</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="wireframe_d-travel_v2_b.html">
+          <div>
+            <div class="page-name">②-A d design travel編集長が旅コースを考える企画（B案：デザインの目線）</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="group">
+    <h3 class="group-title">VER 1 <span class="group-sub">初版</span></h3>
+    <ul class="page-list">
+      <li class="page-item">
+        <a href="wireframe_car_v2.html">
+          <div>
+            <div class="page-name">① 車を中心にした企画</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="wireframe_d-travel_v2.html">
+          <div>
+            <div class="page-name">②-A d design travel編集長が旅コースを考える企画</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="wireframe_d-travel_v2_map.html">
+          <div>
+            <div class="page-name" style="padding-left:1em;">②-B d design travel編集長が旅コースを考える企画（マップ版）</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="wireframe_couple_v2.html">
+          <div>
+            <div class="page-name">③ 夫婦を中心にした企画</div>
+          </div>
+          <span class="page-arrow">→</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 
 </div>
 
