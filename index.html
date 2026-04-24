@@ -127,6 +127,10 @@
     letter-spacing: 1px; color: #999;
     margin-left: 8px;
   }
+  /* Ver1 などアーカイブ扱いのグループ */
+  .group.dim .group-title { color: #999; border-bottom-color: #ccc; }
+  .group.dim .page-item a { opacity: 0.4; transition: opacity 0.2s, background 0.2s; }
+  .group.dim .page-item a:hover { opacity: 1; background: #f3f3f3; }
 </style>
 </head>
 <body>
@@ -169,8 +173,8 @@
     </ul>
   </div>
 
-  <div class="group">
-    <h3 class="group-title">VER 1 <span class="group-sub">初版</span></h3>
+  <div class="group dim">
+    <h3 class="group-title">VER 1 <span class="group-sub">初版（参考）</span></h3>
     <ul class="page-list">
       <li class="page-item">
         <a href="wireframe_car_v2.html">
