@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RECOVERY dRIVE — Ver2 B案（デザインの目線）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #222;
+    background: #fff;
+    line-height: 1.7;
+  }
+
+  .section { padding: 64px 24px; max-width: 960px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: #999; margin-bottom: 8px;
+  }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .section-sub { font-size: 14px; color: #666; max-width: 560px; line-height: 1.8; }
+  .cta-btn {
+    display: inline-block; background: #222; color: #fff;
+    padding: 14px 40px; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; border: none; cursor: pointer; text-decoration: none;
+  }
+  .cta-btn-outline { background: transparent; border: 1px solid #666; color: #666; }
+  .note { display: none; }
+  .placeholder {
+    background: #eee; border: 1px dashed #ccc;
+    display: flex; align-items: center; justify-content: center;
+    color: #999; font-size: 12px;
+  }
+  .wire-badge { display: none; }
+
+  /* ===== ナビ ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #ddd;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 56px;
+  }
+  .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+  .nav-cta {
+    background: #222; color: #fff; padding: 8px 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    border: none; cursor: pointer;
+  }
+
+  /* ===== ヒーロー ===== */
+  .hero {
+    margin-top: 56px;
+    height: 900px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-text {
+    text-align: center;
+    padding: 40px 24px 28px;
+  }
+  .hero-collab {
+    font-size: 11px; letter-spacing: 4px; color: #999; margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 48px; font-weight: 900; letter-spacing: 6px;
+    margin-bottom: 8px; color: #222;
+  }
+  .hero-title .d-mark {
+    display: inline-block; background: #222; color: #fff;
+    width: 56px; height: 56px; line-height: 56px; text-align: center;
+    border-radius: 50%; font-size: 38px; font-weight: 900;
+    vertical-align: middle; margin: 0 -2px;
+  }
+  .hero-lead {
+    font-size: 15px; color: #555; letter-spacing: 1px; line-height: 1.9;
+  }
+
+  /* ===== マルチロウカルーセル ===== */
+  .carousel-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    overflow: hidden;
+    padding: 16px 0;
+    position: relative;
+  }
+  .carousel-wrap::before,
+  .carousel-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .carousel-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #f5f5f5, transparent);
+  }
+  .carousel-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #f5f5f5, transparent);
+  }
+
+  .carousel-row {
+    display: flex;
+    gap: 12px;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .carousel-row.row-1 {
+    animation: scrollLeft 40s linear infinite;
+  }
+  .carousel-row.row-2 {
+    animation: scrollRight 35s linear infinite;
+  }
+
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .spot-card {
+    flex-shrink: 0;
+    width: 280px;
+    height: 180px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    overflow: hidden;
+  }
+  .spot-card-photo {
+    width: 180px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #aaa;
+    position: relative;
+  }
+  .spot-card-num {
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spot-card-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .spot-card-body h4 {
+    font-size: 13px; font-weight: 700; margin-bottom: 2px;
+    line-height: 1.4;
+  }
+  .spot-card-body .genre {
+    font-size: 10px; color: #999; margin-bottom: 8px;
+  }
+  .spot-card-body p {
+    font-size: 11px; color: #666; line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-cta {
+    text-align: center;
+    padding: 20px 24px 36px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== コラボ紹介 ===== */
+  .collab-section {
+    display: grid; grid-template-columns: 1fr 1px 1fr;
+    gap: 40px; align-items: center;
+    max-width: 860px; margin: 0 auto; padding: 64px 24px;
+  }
+  .collab-divider { background: #ddd; height: 100%; }
+  .collab-brand { text-align: center; }
+  .collab-brand .logo {
+    font-size: 18px; font-weight: 700; letter-spacing: 3px; margin-bottom: 8px;
+  }
+  .collab-brand .logo .d-small {
+    display: inline-block; background: #222; color: #fff;
+    width: 22px; height: 22px; line-height: 22px;
+    border-radius: 50%; font-size: 15px; font-weight: 900;
+    vertical-align: middle; margin-right: 2px;
+  }
+  .collab-brand p { font-size: 13px; color: #666; line-height: 1.8; }
+
+  /* ===== 編集長紹介 ===== */
+  .editor-section { background: #f5f5f5; }
+  .editor-card {
+    display: flex; gap: 32px; align-items: flex-start;
+    max-width: 760px; margin: 0 auto;
+  }
+  .editor-photo { width: 160px; height: 200px; flex-shrink: 0; }
+  .editor-info h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .editor-info .role {
+    font-size: 12px; color: #999; letter-spacing: 1px; margin-bottom: 16px;
+  }
+  .editor-info p {
+    font-size: 14px; color: #555; line-height: 2; margin-bottom: 16px;
+  }
+  .editor-info blockquote {
+    font-size: 15px; font-weight: 500; color: #333; line-height: 1.9;
+    border-left: 3px solid #222; padding-left: 16px; margin: 0;
+  }
+
+  /* ===== コースコンセプト ===== */
+  .concept-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin: 40px auto 0; max-width: 960px;
+  }
+  .concept-card {
+    border: 1px solid #ddd; padding: 24px; text-align: center;
+  }
+  .concept-card .icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #eee; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #999;
+  }
+  .concept-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .concept-card p { font-size: 12px; color: #666; line-height: 1.7; }
+
+  /* ===== マップ ===== */
+  .map-section { padding: 0 24px 64px; max-width: 960px; margin: 0 auto; }
+
+  /* ===== タイムライン ===== */
+  .timeline { max-width: 700px; margin: 0 auto; }
+  .spot {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: 20px; padding: 20px 0; border-bottom: 1px solid #eee;
+  }
+  .spot-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #222; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .spot-num.stay { background: #666; }
+  .spot-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .spot-genre { font-size: 11px; color: #999; margin-bottom: 6px; }
+  .spot-body p { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 6px; }
+  .spot-editor {
+    display: inline-block; background: #f5f5f5; border-left: 2px solid #222;
+    padding: 6px 12px; font-size: 12px; color: #444; line-height: 1.6; margin-top: 4px;
+  }
+  .spot-editor span { font-weight: 700; }
+  .spot-drive {
+    text-align: center; padding: 8px; font-size: 11px; color: #bbb;
+  }
+  .spot-car-note {
+    text-align: center; padding: 4px 8px;
+    font-size: 10px; color: #aaa; letter-spacing: 1px;
+  }
+
+  /* ===== C5紹介（大型） ===== */
+  .car-hero {
+    border: 1px solid #ddd; max-width: 960px; margin: 0 auto 48px;
+  }
+  .car-hero-visual {
+    height: 400px;
+  }
+  .car-hero-body {
+    padding: 48px 40px;
+    text-align: left;
+  }
+  .car-hero-body h3 {
+    font-size: 24px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px;
+  }
+  .car-hero-body .car-lead {
+    font-size: 15px; color: #555; line-height: 2; margin-bottom: 40px;
+    max-width: 640px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid #ddd;
+  }
+  .feature-card {
+    padding: 40px 28px;
+    border-right: 1px solid #ddd;
+  }
+  .feature-card:last-child { border-right: none; }
+  .feature-card .feature-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #222; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .feature-card h4 {
+    font-size: 16px; font-weight: 700; margin-bottom: 4px;
+  }
+  .feature-card .feature-en {
+    font-size: 10px; letter-spacing: 2px; color: #999; margin-bottom: 16px;
+  }
+  .feature-card p {
+    font-size: 13px; color: #555; line-height: 1.9;
+  }
+  .feature-card .feature-scene {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee;
+    font-size: 12px; color: #888; line-height: 1.7;
+  }
+  .feature-card .feature-scene strong {
+    color: #555; font-weight: 600;
+  }
+
+  /* ===== フッター ===== */
+  .footer {
+    background: #222; color: #fff; padding: 40px 24px; text-align: center;
+  }
+  .footer-logos {
+    display: flex; justify-content: center; align-items: center;
+    gap: 32px; margin-bottom: 16px;
+  }
+  .footer-logos .f-logo { font-size: 14px; font-weight: 700; letter-spacing: 3px; }
+  .footer-logos .f-x { font-size: 11px; color: #666; }
+  .footer-links {
+    display: flex; justify-content: center; gap: 24px;
+    font-size: 11px; color: #888; margin-bottom: 16px;
+  }
+  .footer-copy { font-size: 10px; color: #555; }
+
+  /* ===== フローティングCTA ===== */
+  .floating-cta {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #222; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    z-index: 99;
+  }
+  .floating-cta p { color: #fff; font-size: 12px; letter-spacing: 1px; }
+  .floating-cta .cta-btn { padding: 10px 28px; font-size: 12px; background: #555; }
+
+  /* ===== スムーズスクロール ===== */
+  html { scroll-behavior: smooth; }
+
+  /* ===== スクロールアニメーション ===== */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-in.delay-1 { transition-delay: 0.1s; }
+  .fade-in.delay-2 { transition-delay: 0.2s; }
+  .fade-in.delay-3 { transition-delay: 0.3s; }
+
+  /* ===== ボタンホバー ===== */
+  .cta-btn { transition: opacity 0.2s, transform 0.15s; }
+  .cta-btn:hover { opacity: 0.8; }
+  .cta-btn:active { transform: scale(0.97); }
+  .nav-cta { transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* ===== ナビスクロール ===== */
+  .nav { transition: box-shadow 0.3s; }
+  .nav.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+  /* ===== フローティングCTA表示制御 ===== */
+  .floating-cta { transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
+  .floating-cta.hidden { transform: translateY(100%); }
+
+  /* ===== 戻りリンク ===== */
+  .nav-back {
+    font-size: 11px; color: #999; text-decoration: none;
+    letter-spacing: 1px; transition: color 0.2s;
+  }
+  .nav-back:hover { color: #222; }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 32px; }
+    .hero-title .d-mark { width: 40px; height: 40px; line-height: 40px; font-size: 28px; }
+    .spot-card { width: 240px; height: 160px; }
+    .spot-card-photo { width: 160px; }
+    .collab-section { grid-template-columns: 1fr; }
+    .collab-divider { height: 1px; width: 100%; }
+    .editor-card { flex-direction: column; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .car-in-context { grid-template-columns: 1fr; }
+    .hero-lead-main { font-size: 18px !important; }
+  }
+
+  /* ===== Ver2 追加スタイル ===== */
+  .hero-lead-main {
+    font-size: 22px; font-weight: 700; line-height: 2;
+    color: #222; margin-top: 32px; letter-spacing: 0.5px;
+  }
+  .hero-lead-sub {
+    font-size: 14px; line-height: 2.2;
+    color: #555; margin-top: 24px;
+  }
+  .hero-lead-sub strong { font-weight: 700; color: #222; }
+  .placeholder-note {
+    font-size: 11px; color: #bbb;
+    margin-top: 12px; letter-spacing: 0.5px;
+  }
+  .new-badge {
+    display: inline-block;
+    background: #e60012; color: #fff;
+    padding: 10px 32px;
+    font-size: 15px; font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+  .version-badge {
+    display: inline-block; font-size: 9px;
+    color: #e60012; letter-spacing: 1px;
+    border: 1px solid #e60012; padding: 2px 6px;
+    margin-left: 8px; vertical-align: middle;
+    font-weight: 700;
+  }
+  .logo-pending {
+    font-size: 10px; color: #bbb;
+    letter-spacing: 1px; margin-top: 4px; display: block;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ナビ ===== -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 一覧</a>
+  <div class="nav-logo">CITROËN C5 AIRCROSS × d design travel<span class="version-badge">Ver2 B案</span></div>
+  <button class="nav-cta">試乗予約 →</button>
+</nav>
+
+<!-- ===== 1. ヒーロー ===== -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-collab">CITROËN C5 AIRCROSS × d design travel</div>
+    <h1 class="hero-title">RECOVERY <span class="d-mark">d</span>RIVE</h1>
+    <p class="hero-lead-main">
+      「デザインの目線」を持った観光ガイド<br>
+      CITROËNは旅の相棒。編集長と一緒に全国を旅しています。
+    </p>
+    <p class="hero-lead-sub">
+      これからの二人のために、ドライブはどうですか。<br>
+      走るほどに快適を実感する乗り心地と、思わず笑顔になる旅の体験。<br>
+      「d design travel」神藤秀人編集長が厳選した3つのコースへ。<br>
+      <strong>さあ、C5 AIRCROSSでリカバリードライブへ。</strong>
+    </p>
+  </div>
+
+  <div class="hero-cta" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+    <a href="#course" class="cta-btn">東京スタート ↓</a>
+    <a href="#course" class="cta-btn cta-btn-outline">名古屋スタート ↓</a>
+    <a href="#course" class="cta-btn cta-btn-outline">大阪スタート ↓</a>
+  </div>
+
+  <!-- カルーセル -->
+  <div class="carousel-wrap">
+    <div class="carousel-row row-1">
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">1</div>写真</div><div class="spot-card-body"><h4>HAGISO</h4><div class="genre">宿泊 / カフェ — 谷中</div><p>築60年の木造アパートをリノベした複合施設。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">2</div>写真</div><div class="spot-card-body"><h4>東京カテドラル</h4><div class="genre">建築 — 文京区</div><p>丹下健三の代表作。ステンレスの外装。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">3</div>写真</div><div class="spot-card-body"><h4>cox / Shingoster</h4><div class="genre">ギャラリー — つくば</div><p>宇宙船のようなコンクリート建築。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">4</div>写真</div><div class="spot-card-body"><h4>そばまさ</h4><div class="genre">食事 — 水戸</div><p>地元で愛される手打ち蕎麦の名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">5</div>写真</div><div class="spot-card-body"><h4>水戸芸術館</h4><div class="genre">建築 — 水戸</div><p>磯崎新設計。らせん状のタワー。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">6</div>写真</div><div class="spot-card-body"><h4>鈴木茂兵衛商店</h4><div class="genre">工芸 — 水戸</div><p>慶応元年創業。水府提灯。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">1</div>写真</div><div class="spot-card-body"><h4>HAGISO</h4><div class="genre">宿泊 / カフェ — 谷中</div><p>築60年の木造アパートをリノベした複合施設。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">2</div>写真</div><div class="spot-card-body"><h4>東京カテドラル</h4><div class="genre">建築 — 文京区</div><p>丹下健三の代表作。ステンレスの外装。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">3</div>写真</div><div class="spot-card-body"><h4>cox / Shingoster</h4><div class="genre">ギャラリー — つくば</div><p>宇宙船のようなコンクリート建築。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">4</div>写真</div><div class="spot-card-body"><h4>そばまさ</h4><div class="genre">食事 — 水戸</div><p>地元で愛される手打ち蕎麦の名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">5</div>写真</div><div class="spot-card-body"><h4>水戸芸術館</h4><div class="genre">建築 — 水戸</div><p>磯崎新設計。らせん状のタワー。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">6</div>写真</div><div class="spot-card-body"><h4>鈴木茂兵衛商店</h4><div class="genre">工芸 — 水戸</div><p>慶応元年創業。水府提灯。</p></div></div>
+    </div>
+    <div class="carousel-row row-2">
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">7</div>写真</div><div class="spot-card-body"><h4>サザコーヒー</h4><div class="genre">カフェ — ひたちなか</div><p>スペシャルティコーヒーの名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">8</div>写真</div><div class="spot-card-body"><h4>木内酒造</h4><div class="genre">酒蔵 — 那珂</div><p>常陸野ネストビールで知られる。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">9</div>写真</div><div class="spot-card-body"><h4>日立駅</h4><div class="genre">建築 — 日立</div><p>妹島和世設計。海に面したガラス張り。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">10</div>写真</div><div class="spot-card-body"><h4>山文魚</h4><div class="genre">食事 — 日立</div><p>あんこう鍋が絶品の魚料理店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">11</div>写真</div><div class="spot-card-body"><h4>里海邸 金波楼本邸</h4><div class="genre">宿泊 — 北茨城</div><p>明治創業の旅館再生。海と一体化。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">7</div>写真</div><div class="spot-card-body"><h4>サザコーヒー</h4><div class="genre">カフェ — ひたちなか</div><p>スペシャルティコーヒーの名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">8</div>写真</div><div class="spot-card-body"><h4>木内酒造</h4><div class="genre">酒蔵 — 那珂</div><p>常陸野ネストビールで知られる。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">9</div>写真</div><div class="spot-card-body"><h4>日立駅</h4><div class="genre">建築 — 日立</div><p>妹島和世設計。海に面したガラス張り。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">10</div>写真</div><div class="spot-card-body"><h4>山文魚</h4><div class="genre">食事 — 日立</div><p>あんこう鍋が絶品の魚料理店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">11</div>写真</div><div class="spot-card-body"><h4>里海邸 金波楼本邸</h4><div class="genre">宿泊 — 北茨城</div><p>明治創業の旅館再生。海と一体化。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. d design travel 紹介 ===== -->
+<div class="collab-section fade-in" style="grid-template-columns:1fr; text-align:center; max-width:560px;">
+  <div class="collab-brand">
+    <div class="logo">
+      <span class="d-small">d</span> design travel
+      <span class="logo-pending">※ ロゴ手配中</span>
+    </div>
+    <p>D&amp;DEPARTMENT発行のトラベルガイド。47都道府県を「ロングライフデザイン」の視点で編集。その土地の「らしさ」を伝える。</p>
+    <p class="placeholder-note">※ 紹介コピーは確定版を反映予定（コピーⓑ）</p>
+  </div>
+</div>
+
+<!-- ===== 3. 編集長紹介 ===== -->
+<section class="editor-section">
+  <div class="section">
+    <div class="section-label">COURSE DIRECTOR</div>
+    <div class="editor-card fade-in">
+      <div class="editor-photo placeholder">写真</div>
+      <div class="editor-info">
+        <h3>神藤 秀人</h3>
+        <div class="role">d design travel 編集長</div>
+        <p>47都道府県をくまなく取材し、「ロングライフデザイン」の視点で日本各地の魅力を発信し続ける編集者。地元の人が日常的に通う店、長く愛される建築、受け継がれる工芸 ——「観光」ではなく「その土地の暮らし」に触れる旅を提案している。</p>
+        <blockquote>「ドライブの旅は、電車では行けない場所に連れていってくれる。<br>今回は"寄り道"こそが目的のコースをつくりました。」</blockquote>
+        <p class="placeholder-note">※ プロフィール・コメントは神藤編集長より受領次第差し替え（コピーⓒ）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. コースコンセプト ===== -->
+<section style="background:#fff;">
+  <div class="section" style="text-align:center;">
+    <div class="section-label">COURSE CONCEPT</div>
+    <h2 class="section-title">3つの「らしさ」を巡る</h2>
+    <p class="section-sub" style="margin:0 auto;">神藤編集長が選んだ、このコースのテーマ。</p>
+
+    <div class="concept-grid">
+      <div class="concept-card fade-in">
+        <div class="icon">建築</div>
+        <h4>建築を訪ねる</h4>
+        <p>丹下健三、磯崎新、妹島和世。巨匠の建築を巡る旅は、ドライブでこそ実現する。</p>
+      </div>
+      <div class="concept-card fade-in delay-1">
+        <div class="icon">工芸</div>
+        <h4>手仕事に触れる</h4>
+        <p>水府提灯、笠間焼、常陸野ネストビール。長く続くものづくりに出会う。</p>
+      </div>
+      <div class="concept-card fade-in delay-2">
+        <div class="icon">食</div>
+        <h4>土地のものを食べる</h4>
+        <p>手打ち蕎麦、あんこう鍋、スペシャルティコーヒー。地元で愛される味。</p>
+      </div>
+    </div>
+    <p class="placeholder-note" style="margin-top:24px;">※ アイコン（建築／工芸／食）は d design travel の使用マークを確認中</p>
+  </div>
+</section>
+
+<!-- ===== 5. コースタブ + マップ ===== -->
+<div class="map-section" id="course">
+  <div style="display:flex; border-bottom:1px solid #ddd; margin-bottom:32px; max-width:960px;">
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#222; border-bottom:2px solid #222; cursor:pointer;">東京スタート</div>
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#999; cursor:pointer;">名古屋スタート</div>
+    <div style="padding:12px 24px; font-size:13px; font-weight:600; color:#999; cursor:pointer;">大阪スタート</div>
+  </div>
+  <div class="placeholder" style="height:520px; width:100%;">
+    Googleマイマップ埋め込み（iframe）
+  </div>
+  <div style="display:flex; justify-content:center; gap:24px; margin-top:16px;">
+    <span style="font-size:11px; color:#999; letter-spacing:1px;">1泊2日</span>
+    <span style="font-size:11px; color:#999; letter-spacing:1px;">約250km</span>
+    <span style="font-size:11px; color:#999; letter-spacing:1px;">11スポット</span>
+    <span style="font-size:11px; color:#999; letter-spacing:1px;">東京 → 茨城</span>
+  </div>
+</div>
+
+<!-- ===== 6. タイムライン ===== -->
+<section style="padding:0 24px 64px;">
+  <div class="timeline">
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>HAGISO</h4>
+        <div class="spot-genre">宿泊 / カフェ — 台東区谷中</div>
+        <p>築60年の木造アパートをリノベした複合施設。HAGI CAFEでモーニングから旅をスタート。</p>
+        <div class="spot-editor"><span>神藤:</span> 谷中は東京のなかで最も「暮らし」が残っている街。旅の起点にふさわしい場所です。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+    <div class="spot-car-note">PHCサスペンションが都内の段差を吸収</div>
+
+    <div class="spot">
+      <div class="spot-num">2</div>
+      <div class="spot-body">
+        <h4>東京カテドラル聖マリア大聖堂</h4>
+        <div class="spot-genre">建築 — 文京区関口</div>
+        <p>丹下健三の代表作。ステンレスの外装と十字架型の平面構成。</p>
+        <div class="spot-editor"><span>神藤:</span> 丹下建築のなかでも圧倒的なスケール。中に入ると、言葉を失います。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+    <div class="spot-car-note">常磐道へ。48Vハイブリッドで静かな車内</div>
+
+    <div class="spot">
+      <div class="spot-num">3</div>
+      <div class="spot-body">
+        <h4>cox / Shingoster LIVING</h4>
+        <div class="spot-genre">ギャラリー / カフェ — つくば市</div>
+        <p>宇宙船のようなコンクリート建築と古民家が隣接。笠間の作家・小林東洋氏の器。</p>
+        <div class="spot-editor"><span>神藤:</span> ここは「寄り道」の醍醐味。電車では絶対に来られない場所にあるんです。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約1時間</div>
+
+    <div class="spot">
+      <div class="spot-num">4</div>
+      <div class="spot-body">
+        <h4>そばまさ</h4>
+        <div class="spot-genre">食事 — 水戸市</div>
+        <p>地元で愛される手打ち蕎麦。名物「つけけんちん」は売り切れ注意。</p>
+        <div class="spot-editor"><span>神藤:</span> 地元の人が並ぶ店。「つけけんちん」は冬の茨城を代表する味です。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">5</div>
+      <div class="spot-body">
+        <h4>水戸芸術館</h4>
+        <div class="spot-genre">建築 / 美術 — 水戸市</div>
+        <p>磯崎新設計。らせん状のシンボルタワーから水戸を一望。</p>
+        <div class="spot-editor"><span>神藤:</span> 磯崎新がつくった「地方の文化拠点」。今なお企画展のレベルが高い。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約5分</div>
+
+    <div class="spot">
+      <div class="spot-num">6</div>
+      <div class="spot-body">
+        <h4>鈴木茂兵衛商店</h4>
+        <div class="spot-genre">工芸 — 水戸市</div>
+        <p>慶応元年創業。伝統の水府提灯をモダンにアップデート。</p>
+        <div class="spot-editor"><span>神藤:</span> ロングライフデザインそのもの。伝統を更新し続ける姿勢に毎回感動します。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+    <div class="spot-car-note">コンフォートシートで長距離も快適</div>
+
+    <div class="spot">
+      <div class="spot-num">7</div>
+      <div class="spot-body">
+        <h4>サザコーヒー 本店</h4>
+        <div class="spot-genre">カフェ — ひたちなか市</div>
+        <p>スペシャルティコーヒーの名店。将軍コーヒーが人気。</p>
+        <div class="spot-editor"><span>神藤:</span> コーヒーへの情熱が別格。自社農園をコロンビアに持つ、茨城が誇る一杯。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約15分</div>
+
+    <div class="spot">
+      <div class="spot-num">8</div>
+      <div class="spot-body">
+        <h4>木内酒造</h4>
+        <div class="spot-genre">酒蔵 — 那珂市</div>
+        <p>1823年創業。常陸野ネストビールで知られる酒蔵。見学・試飲可。</p>
+        <div class="spot-editor"><span>神藤:</span> 日本酒の酒蔵がクラフトビールで世界に出た。「変わる」と「続く」の両立。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約30分</div>
+
+    <div class="spot">
+      <div class="spot-num">9</div>
+      <div class="spot-body">
+        <h4>日立駅</h4>
+        <div class="spot-genre">建築 — 日立市</div>
+        <p>妹島和世設計。海に面したガラス張りの駅舎。展望台としても。</p>
+        <div class="spot-editor"><span>神藤:</span> 駅が「目的地」になれることを証明した建築。夕暮れの海は格別です。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約2分</div>
+
+    <div class="spot">
+      <div class="spot-num">10</div>
+      <div class="spot-body">
+        <h4>山文魚</h4>
+        <div class="spot-genre">食事 — 日立市</div>
+        <p>割烹着の女将がもてなす魚料理店。あんこう鍋が絶品。</p>
+        <div class="spot-editor"><span>神藤:</span> 「地元の人が特別な日に行く店」。それが旅先でのベストな選択です。</div>
+      </div>
+    </div>
+    <div class="spot-drive">↓ 約40分</div>
+    <div class="spot-car-note">海沿いの道をPHCが滑らかに走破</div>
+
+    <div class="spot">
+      <div class="spot-num stay">泊</div>
+      <div class="spot-body">
+        <h4>里海邸 金波楼本邸</h4>
+        <div class="spot-genre">宿泊 — 北茨城市</div>
+        <p>明治創業の旅館再生。海と一体化する空間。焼き魚の朝食が忘れられない。</p>
+        <div class="spot-editor"><span>神藤:</span> 何もしない贅沢。波の音だけの夜を過ごしてください。</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin:28px 0 16px;">DAY 2</h3>
+    <div class="spot">
+      <div class="spot-num" style="background:#999;">→</div>
+      <div class="spot-body">
+        <h4>笠間・益子方面へ</h4>
+        <div class="spot-genre">陶芸の街へ</div>
+        <p>詳細は近日公開予定。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. C5 AIRCROSS ===== -->
+<section style="background:#f5f5f5;">
+  <div class="section" style="text-align:center;">
+    <div class="new-badge">NEW C5 AIRCROSS</div>
+    <h2 class="section-title" style="font-size:30px;">このコースのために、C5 AIRCROSS。</h2>
+    <p class="section-sub" style="margin:0 auto 40px;">
+      250kmの寄り道ドライブを支える、3つの快適テクノロジー。
+    </p>
+
+    <div class="car-hero fade-in">
+      <div class="car-hero-visual placeholder" style="height:400px;">
+        C5 AIRCROSS 走行シーン（コースの風景と車両）
+      </div>
+      <div class="car-hero-body">
+        <h3>CITROËN C5 AIRCROSS HYBRID</h3>
+        <p class="car-lead">
+          「長く走っても疲れない」を設計思想にした、シトロエンのフラッグシップSUV。<br>
+          路面を選ばない乗り心地が、寄り道の多い旅を変えます。
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">PHC</div>
+          <h4>PHC®</h4>
+          <div class="feature-en">PROGRESSIVE HYDRAULIC CUSHION</div>
+          <p>路面の凹凸を油圧で吸収する、シトロエン独自のサスペンション。段差やうねりを車内に伝えず、乗員はフラットな乗り心地だけを感じます。</p>
+          <div class="feature-scene">
+            <strong>このコースでは:</strong> 都内の段差、常磐道の路面変化、海沿いのうねり——250kmのあらゆる路面を滑らかに吸収します。
+          </div>
+        </div>
+        <div class="feature-card fade-in delay-1">
+          <div class="feature-icon">SEAT</div>
+          <h4>アドバンストコンフォートシート</h4>
+          <div class="feature-en">ADVANCED COMFORT SEATS</div>
+          <p>高密度フォーム+厚み15mmの特殊素材が体圧を分散。運転席も助手席も、長時間座っていたくなる座り心地を実現します。</p>
+          <div class="feature-scene">
+            <strong>このコースでは:</strong> つくば→水戸→日立と移動が続くDAY 1後半も、降りた瞬間に「疲れていない」と気づきます。
+          </div>
+        </div>
+        <div class="feature-card fade-in delay-2">
+          <div class="feature-icon">48V</div>
+          <h4>48Vハイブリッド</h4>
+          <div class="feature-en">48V HYBRID SYSTEM</div>
+          <p>市街地走行の約50%をEVモードで走行。エンジン停止時の静粛性は、車内の音楽も会話もクリアに届けます。</p>
+          <div class="feature-scene">
+            <strong>このコースでは:</strong> 谷中の路地、水戸の市街地、北茨城の住宅街——スポット周辺はEVモードで静かにアプローチ。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <a href="#" class="cta-btn" style="padding:18px 56px; font-size:15px;">試乗を予約する →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. フッター ===== -->
+<footer class="footer">
+  <div class="footer-logos">
+    <span class="f-logo">CITROËN</span>
+    <span class="f-x">×</span>
+    <span class="f-logo" style="font-size:13px;">d design travel</span>
+  </div>
+  <div class="footer-links">
+    <span>CITROËN 公式サイト</span>
+    <span>d design travel</span>
+    <span>ディーラー検索</span>
+    <span>Instagram</span>
+  </div>
+  <div class="footer-copy">&copy; 2026 CITROËN JAPON × D&DEPARTMENT PROJECT. All rights reserved.</div>
+</footer>
+
+<!-- ===== フローティングCTA ===== -->
+<div class="floating-cta">
+  <p>RECOVERY DRIVE × d design travel</p>
+  <a href="#" class="cta-btn">試乗予約 →</a>
+</div>
+
+<script>
+// Scroll fade-in
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// Nav shadow + floating CTA
+const nav = document.querySelector('.nav');
+const floating = document.querySelector('.floating-cta');
+const hero = document.querySelector('.hero');
+if (floating) floating.classList.add('hidden');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (nav) nav.classList.toggle('scrolled', y > 10);
+  if (floating && hero) floating.classList.toggle('hidden', y < hero.offsetHeight * 0.8);
+}, { passive: true });
+</script>
+</body>
+</html>
