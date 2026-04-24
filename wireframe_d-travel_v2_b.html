@@ -444,6 +444,23 @@
     font-size: 10px; color: #bbb;
     letter-spacing: 1px; margin-top: 4px; display: block;
   }
+  .car-banner {
+    background: #111; padding: 140px 24px; text-align: center;
+  }
+  .car-banner-inner { max-width: 960px; margin: 0 auto; }
+  .car-banner-title {
+    color: #fff; font-size: 56px; font-weight: 900;
+    letter-spacing: 10px; margin-bottom: 56px; line-height: 1.2;
+  }
+  .car-banner-cta {
+    padding: 18px 56px; font-size: 15px;
+    background: transparent; border: 1px solid #fff; color: #fff;
+  }
+  .car-banner-cta:hover { background: #fff; color: #111; opacity: 1; }
+  @media (max-width: 768px) {
+    .car-banner { padding: 80px 24px; }
+    .car-banner-title { font-size: 32px; letter-spacing: 6px; margin-bottom: 40px; }
+  }
 </style>
 </head>
 <body>
@@ -725,61 +742,11 @@
   </div>
 </section>
 
-<!-- ===== 7. C5 AIRCROSS ===== -->
-<section style="background:#f5f5f5;">
-  <div class="section" style="text-align:center;">
-    <div class="new-badge">NEW C5 AIRCROSS</div>
-    <h2 class="section-title" style="font-size:30px;">このコースのために、C5 AIRCROSS。</h2>
-    <p class="section-sub" style="margin:0 auto 40px;">
-      250kmの寄り道ドライブを支える、3つの快適テクノロジー。
-    </p>
-
-    <div class="car-hero fade-in">
-      <div class="car-hero-visual placeholder" style="height:400px;">
-        C5 AIRCROSS 走行シーン（コースの風景と車両）
-      </div>
-      <div class="car-hero-body">
-        <h3>CITROËN C5 AIRCROSS HYBRID</h3>
-        <p class="car-lead">
-          「長く走っても疲れない」を設計思想にした、シトロエンのフラッグシップSUV。<br>
-          路面を選ばない乗り心地が、寄り道の多い旅を変えます。
-        </p>
-      </div>
-
-      <div class="feature-grid">
-        <div class="feature-card fade-in">
-          <div class="feature-icon">PHC</div>
-          <h4>PHC®</h4>
-          <div class="feature-en">PROGRESSIVE HYDRAULIC CUSHION</div>
-          <p>路面の凹凸を油圧で吸収する、シトロエン独自のサスペンション。段差やうねりを車内に伝えず、乗員はフラットな乗り心地だけを感じます。</p>
-          <div class="feature-scene">
-            <strong>このコースでは:</strong> 都内の段差、常磐道の路面変化、海沿いのうねり——250kmのあらゆる路面を滑らかに吸収します。
-          </div>
-        </div>
-        <div class="feature-card fade-in delay-1">
-          <div class="feature-icon">SEAT</div>
-          <h4>アドバンストコンフォートシート</h4>
-          <div class="feature-en">ADVANCED COMFORT SEATS</div>
-          <p>高密度フォーム+厚み15mmの特殊素材が体圧を分散。運転席も助手席も、長時間座っていたくなる座り心地を実現します。</p>
-          <div class="feature-scene">
-            <strong>このコースでは:</strong> つくば→水戸→日立と移動が続くDAY 1後半も、降りた瞬間に「疲れていない」と気づきます。
-          </div>
-        </div>
-        <div class="feature-card fade-in delay-2">
-          <div class="feature-icon">48V</div>
-          <h4>48Vハイブリッド</h4>
-          <div class="feature-en">48V HYBRID SYSTEM</div>
-          <p>市街地走行の約50%をEVモードで走行。エンジン停止時の静粛性は、車内の音楽も会話もクリアに届けます。</p>
-          <div class="feature-scene">
-            <strong>このコースでは:</strong> 谷中の路地、水戸の市街地、北茨城の住宅街——スポット周辺はEVモードで静かにアプローチ。
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:40px;">
-      <a href="#" class="cta-btn" style="padding:18px 56px; font-size:15px;">試乗を予約する →</a>
-    </div>
+<!-- ===== 7. NEW C5 AIRCROSS ビッグバナー ===== -->
+<section class="car-banner fade-in">
+  <div class="car-banner-inner">
+    <div class="car-banner-title">NEW C5 AIRCROSS</div>
+    <a href="#" class="cta-btn car-banner-cta">試乗を予約する →</a>
   </div>
 </section>
 
