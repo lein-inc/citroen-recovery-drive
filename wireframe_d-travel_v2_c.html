@@ -981,6 +981,130 @@
     .nav-logo { font-size: 9px; }
     .section { padding: 32px 14px; }
   }
+
+  /* ==========================================================================
+     SP個別調整（指示7点）
+     ========================================================================== */
+  @media (max-width: 768px) {
+
+    /* 1. CHOOSE YOUR COURSE：3つ横並び */
+    .hero-course-cta-buttons {
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 6px !important;
+      align-items: stretch !important;
+    }
+    .hero-course-cta-buttons .cta-btn,
+    .hero-course-cta-buttons a {
+      width: auto !important;
+      flex: 1 1 0 !important;
+      padding: 12px 4px !important;
+      font-size: 11px !important;
+      letter-spacing: 0 !important;
+      white-space: nowrap;
+    }
+
+    /* 2. d design travel 表紙サムネイル：4カラム */
+    .dtravel-block-visual {
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 6px !important;
+    }
+    .dtravel-cover { font-size: 8px; }
+    .dtravel-cover::before { font-size: 7px; }
+
+    /* 3. 編集長プロフィール本文：左寄せ・流し込み */
+    .dtravel-block-editor .editor-info p,
+    .dtravel-block-editor .editor-info blockquote {
+      text-align: left !important;
+    }
+    .dtravel-block-editor .editor-info {
+      text-align: left;
+      width: 100%;
+    }
+    .dtravel-block-editor .editor-info .name,
+    .dtravel-block-editor .editor-info h3,
+    .dtravel-block-editor .editor-info .role,
+    .dtravel-block-editor .editor-info .editor-eyebrow {
+      text-align: center;
+      display: block;
+    }
+
+    /* 4. car-banner タイトル：3行で収まるサイズに */
+    .car-banner { padding: 48px 20px !important; }
+    .car-banner-title {
+      font-size: 20px !important;
+      letter-spacing: 1px !important;
+      line-height: 1.7 !important;
+      margin-bottom: 24px !important;
+    }
+
+    /* 5. カテゴリー説明をもう少し小さく */
+    .cat-icon-label { font-size: 9px !important; letter-spacing: 1.5px !important; }
+    .cat-icon-desc { font-size: 10px !important; line-height: 1.5 !important; }
+    .category-icons { gap: 12px 8px !important; }
+    .cat-icon-wrap { min-width: 0; }
+
+    /* 6. Googleマイマップ：正方形 */
+    .timeline-panel .placeholder[style*="height:520px"],
+    .timeline-panel .placeholder[style*="height: 520px"] {
+      height: auto !important;
+      aspect-ratio: 1 / 1 !important;
+      width: 100% !important;
+    }
+
+    /* 7. スポット記事：上に画像＋名前、下に本文を全幅で流す */
+    .spot {
+      display: grid !important;
+      grid-template-columns: 100px 1fr !important;
+      grid-template-rows: auto auto !important;
+      column-gap: 14px !important;
+      row-gap: 10px !important;
+      align-items: start !important;
+      padding: 20px 0 !important;
+    }
+    .spot-media {
+      grid-column: 1; grid-row: 1;
+    }
+    .spot-photo {
+      width: 100px !important; height: 100px !important;
+      margin: 0 !important;
+    }
+    /* spot-body 自体を透明化して、子要素を grid 配下に直接展開 */
+    .spot-body { display: contents !important; }
+    .spot-title-row {
+      grid-column: 2 !important; grid-row: 1 !important;
+      display: flex !important; flex-direction: column !important;
+      align-items: flex-start !important; gap: 6px !important;
+      align-self: center !important;
+      margin-bottom: 0 !important;
+    }
+    .spot-title-row .spot-cat {
+      flex-direction: row !important; gap: 6px !important;
+      align-items: center !important;
+    }
+    .spot-title-row .spot-cat-icon {
+      width: 22px !important; height: 22px !important;
+    }
+    .spot-title-row .spot-cat-name {
+      font-size: 9px !important; letter-spacing: 1px !important;
+    }
+    .spot-title-row h4 {
+      font-size: 16px !important; line-height: 1.4 !important;
+    }
+    /* 残りのテキスト類は全幅で下に流し込む */
+    .spot > .spot-genre,
+    .spot-body > .spot-genre,
+    .spot > p,
+    .spot-body > p,
+    .spot > .spot-info,
+    .spot-body > .spot-info,
+    .spot > .spot-data,
+    .spot-body > .spot-data,
+    .spot > .spot-editor,
+    .spot-body > .spot-editor {
+      grid-column: 1 / -1 !important;
+    }
+  }
 </style>
 </head>
 <body>
