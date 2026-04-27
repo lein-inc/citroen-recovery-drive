@@ -840,6 +840,147 @@
     .dtravel-block-editor { flex-direction: column; align-items: center; text-align: center; }
     .dtravel-block-editor .editor-info blockquote { text-align: left; }
   }
+
+  /* ==========================================================================
+     SP / レスポンシブ ブラッシュアップ（末尾上書き）
+     ========================================================================== */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img, video, iframe { max-width: 100%; height: auto; }
+
+  /* タブレット以下 */
+  @media (max-width: 980px) {
+    .section { padding: 56px 20px; }
+    .dtravel-block-wrap { padding: 56px 20px; }
+    .car-banner { padding: 80px 24px; }
+  }
+
+  /* SP（≤768px） */
+  @media (max-width: 768px) {
+    /* セクション余白を全体的に圧縮 */
+    .section { padding: 40px 16px; max-width: 100%; }
+    .dtravel-block-wrap { padding: 40px 16px; }
+
+    /* ヘッダーナビ */
+    .nav { padding: 0 14px; height: 52px; }
+    .nav-logo {
+      font-size: 10px; letter-spacing: 1px;
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-cta { font-size: 10px; padding: 7px 14px; letter-spacing: 0.5px; flex-shrink: 0; }
+    .version-badge { display: none; } /* Ver4バッジは省略 */
+
+    /* ヒーロー（固定height撤廃 → 内容に応じて自動） */
+    .hero {
+      margin-top: 52px;
+      height: auto;
+      min-height: 0;
+      padding-bottom: 16px;
+    }
+    .hero-text { padding: 24px 16px 12px; }
+    .hero-title {
+      font-size: 28px;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .hero-title .d-mark {
+      width: 36px; height: 36px; line-height: 36px;
+      font-size: 24px;
+    }
+    .hero-text-row { gap: 20px; margin-top: 8px; }
+    .hero-car-image { width: 160px; height: 160px; }
+    .hero-lead-headline { font-size: 14px !important; line-height: 1.7 !important; }
+    .hero-lead-main { font-size: 12px !important; line-height: 1.85 !important; }
+
+    /* カルーセル：SP用にカード縮小・速度UP */
+    .carousel-wrap { padding: 8px 0; gap: 8px; }
+    .carousel-row { gap: 8px; }
+    .spot-card { width: 220px; height: 140px; }
+    .spot-card-photo { width: 130px; }
+    .spot-card-body { padding: 10px 12px; }
+    .spot-card-body h4 { font-size: 12px; }
+    .spot-card-body .genre { font-size: 9px; margin-bottom: 4px; }
+    .spot-card-body p { font-size: 10px; -webkit-line-clamp: 2; }
+    .carousel-row.row-1 { animation-duration: 30s; }
+    .carousel-row.row-2 { animation-duration: 26s; }
+    .carousel-wrap::before, .carousel-wrap::after { width: 36px; }
+
+    /* ヒーロー直下のコース選択CTA → 縦積み */
+    .hero-course-cta { padding: 16px 16px 24px; }
+    .hero-course-cta-label { font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; }
+    .hero-course-cta-buttons {
+      flex-direction: column; gap: 8px; align-items: stretch;
+    }
+    .hero-course-cta-buttons .cta-btn,
+    .hero-course-cta-buttons a { width: 100%; padding: 14px 20px; font-size: 12px; }
+
+    /* dtravel-block 内 */
+    .dtravel-block { padding: 16px 0; }
+    .dtravel-block-header { margin-bottom: 24px; }
+    .dtravel-cover { font-size: 9px; }
+    .dtravel-block-visual-note { font-size: 10px; margin-bottom: 24px; }
+
+    /* car-banner */
+    .car-banner { padding: 56px 20px; }
+    .car-banner-title { font-size: 26px; letter-spacing: 3px; margin-bottom: 28px; }
+    .car-banner-cta { font-size: 12px; padding: 14px 28px; }
+
+    /* コースタブ・デイタブ */
+    .course-tabs { margin-bottom: 24px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .course-tab { flex: 0 0 auto; padding: 14px 16px; font-size: 12px; white-space: nowrap; }
+    .day-tabs { flex-wrap: wrap; gap: 6px; }
+    .day-tab { padding: 7px 14px; font-size: 11px; letter-spacing: 0.5px; }
+
+    /* タイムライン */
+    .timeline { padding: 0 4px; }
+
+    /* スポットカード（記事内） */
+    .spot { grid-template-columns: 90px 1fr !important; gap: 12px !important; }
+    .spot-photo { width: 90px !important; height: 90px !important; }
+    .spot-cat-icon { width: 26px !important; height: 26px !important; }
+    .spot-body h4 { font-size: 14px !important; }
+    .spot-body p { font-size: 12px !important; line-height: 1.7 !important; }
+    .spot-genre { font-size: 10px !important; }
+    .spot-editor { font-size: 11px !important; padding: 5px 10px !important; }
+
+    /* セクション見出し */
+    .section-title { font-size: 18px; }
+    .section-sub { font-size: 13px; line-height: 1.8; }
+    .section-label { font-size: 9px; letter-spacing: 2px; }
+
+    /* CTA汎用 */
+    .cta-btn { padding: 12px 28px; font-size: 12px; letter-spacing: 0.5px; }
+
+    /* dtravel-block-editor 内（再強化） */
+    .dtravel-block-editor .editor-photo { width: 120px; height: 120px; }
+    .editor-info .name { font-size: 16px; }
+    .editor-info .role { font-size: 11px; }
+
+    /* フッター */
+    .footer { padding: 32px 16px 96px; } /* floating-cta分の余白 */
+    .footer-logos { gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+    .footer-logos .f-logo { font-size: 12px; letter-spacing: 2px; }
+    .footer-links { gap: 16px; font-size: 10px; flex-wrap: wrap; }
+    .footer-copy { font-size: 9px; }
+
+    /* フローティングCTA */
+    .floating-cta { padding: 10px 14px; gap: 10px; }
+    .floating-cta .cta-btn { padding: 10px 18px; font-size: 11px; }
+
+    /* placeholder 文字列の強制縮小 */
+    .placeholder { font-size: 11px; }
+  }
+
+  /* SS（≤480px）: 細かい詰め */
+  @media (max-width: 480px) {
+    .hero-title { font-size: 24px; letter-spacing: 2px; }
+    .hero-title .d-mark { width: 32px; height: 32px; line-height: 32px; font-size: 20px; }
+    .spot-card { width: 200px; }
+    .spot-card-photo { width: 110px; }
+    .car-banner-title { font-size: 22px; letter-spacing: 2px; }
+    .nav-logo { font-size: 9px; }
+    .section { padding: 32px 14px; }
+  }
 </style>
 </head>
 <body>
