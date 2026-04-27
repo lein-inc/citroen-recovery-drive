@@ -62,6 +62,43 @@
     text-align: center;
     padding: 40px 24px 28px;
   }
+  .hero-text-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .hero-text-messages {
+    grid-column: 2;
+    max-width: 720px;
+    text-align: center;
+  }
+  .hero-car-image {
+    grid-column: 3;
+    justify-self: center;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    border: 1px dashed #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  @media (max-width: 768px) {
+    .hero-text-row {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-top: 8px;
+    }
+    .hero-text-messages,
+    .hero-car-image { grid-column: 1; justify-self: center; }
+    .hero-car-image { width: 180px; height: 180px; font-size: 12px; }
+  }
   .hero-collab {
     font-size: 11px; letter-spacing: 4px; color: #999; margin-bottom: 16px;
   }
@@ -814,14 +851,19 @@
 <section class="hero">
   <div class="hero-text">
     <h1 class="hero-title">RECOVERY <span class="d-mark">d</span>RIVE</h1>
-    <p class="hero-lead-headline">
-      走るほどに快適なNEW C5 AIRCROSS。<br>
-      リカバリードライブで、新しい二人になる。
-    </p>
-    <p class="hero-lead-main">
-      子育てもひと段落して、気がつけば二人。<br>
-      さて何をしようか、何を話そうか。
-    </p>
+    <div class="hero-text-row">
+      <div class="hero-text-messages">
+        <p class="hero-lead-headline">
+          走るほどに快適なNEW C5 AIRCROSS。<br>
+          リカバリードライブで、新しい二人になる。
+        </p>
+        <p class="hero-lead-main">
+          子育てもひと段落して、気がつけば二人。<br>
+          さて何をしようか、何を話そうか。
+        </p>
+      </div>
+      <div class="hero-car-image">車両写真</div>
+    </div>
   </div>
 
   <!-- カルーセル -->
