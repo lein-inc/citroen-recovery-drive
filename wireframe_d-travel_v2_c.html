@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RECOVERY dRIVE — Ver4（dトラベル編集長コース）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #222;
+    background: #fff;
+    line-height: 1.7;
+  }
+
+  .section { padding: 64px 24px; max-width: 960px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: #999; margin-bottom: 8px;
+  }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .section-sub { font-size: 14px; color: #666; max-width: 560px; line-height: 1.8; }
+  .cta-btn {
+    display: inline-block; background: #222; color: #fff;
+    padding: 14px 40px; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; border: none; cursor: pointer; text-decoration: none;
+  }
+  .cta-btn-outline { background: transparent; border: 1px solid #666; color: #666; }
+  .note { display: none; }
+  .placeholder {
+    background: #eee; border: 1px dashed #ccc;
+    display: flex; align-items: center; justify-content: center;
+    color: #999; font-size: 12px;
+  }
+  .wire-badge { display: none; }
+
+  /* ===== ナビ ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #ddd;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 56px;
+  }
+  .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+  .nav-cta {
+    background: #222; color: #fff; padding: 8px 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    border: none; cursor: pointer;
+  }
+
+  /* ===== ヒーロー ===== */
+  .hero {
+    margin-top: 56px;
+    height: 900px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-text {
+    text-align: center;
+    padding: 40px 24px 28px;
+  }
+  .hero-collab {
+    font-size: 11px; letter-spacing: 4px; color: #999; margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 48px; font-weight: 900; letter-spacing: 6px;
+    margin-bottom: 8px; color: #222;
+  }
+  .hero-title .d-mark {
+    display: inline-block; background: #222; color: #fff;
+    width: 56px; height: 56px; line-height: 56px; text-align: center;
+    border-radius: 50%; font-size: 38px; font-weight: 900;
+    vertical-align: middle; margin: 0 -2px;
+  }
+  .hero-lead {
+    font-size: 15px; color: #555; letter-spacing: 1px; line-height: 1.9;
+  }
+
+  /* ===== マルチロウカルーセル ===== */
+  .carousel-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    overflow: hidden;
+    padding: 16px 0;
+    position: relative;
+  }
+  .carousel-wrap::before,
+  .carousel-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .carousel-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #f5f5f5, transparent);
+  }
+  .carousel-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #f5f5f5, transparent);
+  }
+
+  .carousel-row {
+    display: flex;
+    gap: 12px;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .carousel-row.row-1 {
+    animation: scrollLeft 40s linear infinite;
+  }
+  .carousel-row.row-2 {
+    animation: scrollRight 35s linear infinite;
+  }
+
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .spot-card {
+    flex-shrink: 0;
+    width: 280px;
+    height: 180px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    overflow: hidden;
+  }
+  .spot-card-photo {
+    width: 180px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #aaa;
+    position: relative;
+  }
+  .spot-card-num {
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spot-card-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .spot-card-body h4 {
+    font-size: 13px; font-weight: 700; margin-bottom: 2px;
+    line-height: 1.4;
+  }
+  .spot-card-body .genre {
+    font-size: 10px; color: #999; margin-bottom: 8px;
+  }
+  .spot-card-body p {
+    font-size: 11px; color: #666; line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-cta {
+    text-align: center;
+    padding: 20px 24px 36px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== コラボ紹介 ===== */
+  .collab-section {
+    display: grid; grid-template-columns: 1fr 1px 1fr;
+    gap: 40px; align-items: center;
+    max-width: 860px; margin: 0 auto; padding: 64px 24px;
+  }
+  .collab-divider { background: #ddd; height: 100%; }
+  .collab-brand { text-align: center; }
+  .collab-brand .logo {
+    font-size: 18px; font-weight: 700; letter-spacing: 3px; margin-bottom: 8px;
+  }
+  .collab-brand .logo .d-small {
+    display: inline-block; background: #222; color: #fff;
+    width: 22px; height: 22px; line-height: 22px;
+    border-radius: 50%; font-size: 15px; font-weight: 900;
+    vertical-align: middle; margin-right: 2px;
+  }
+  .collab-brand p { font-size: 13px; color: #666; line-height: 1.8; }
+
+  /* ===== 編集長紹介 ===== */
+  .editor-section { background: #f5f5f5; }
+  .editor-card {
+    display: flex; gap: 32px; align-items: flex-start;
+    max-width: 760px; margin: 0 auto;
+  }
+  .editor-photo { width: 160px; height: 200px; flex-shrink: 0; }
+  .editor-info h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .editor-info .role {
+    font-size: 12px; color: #999; letter-spacing: 1px; margin-bottom: 16px;
+  }
+  .editor-info p {
+    font-size: 14px; color: #555; line-height: 2; margin-bottom: 16px;
+  }
+  .editor-info blockquote {
+    font-size: 15px; font-weight: 500; color: #333; line-height: 1.9;
+    border-left: 3px solid #222; padding-left: 16px; margin: 0;
+  }
+
+  /* ===== コースコンセプト ===== */
+  .concept-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin: 40px auto 0; max-width: 960px;
+  }
+  .concept-card {
+    border: 1px solid #ddd; padding: 24px; text-align: center;
+  }
+  .concept-card .icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #eee; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #999;
+  }
+  .concept-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .concept-card p { font-size: 12px; color: #666; line-height: 1.7; }
+
+  /* ===== マップ ===== */
+  .map-section { padding: 0 24px 64px; max-width: 960px; margin: 0 auto; }
+
+  /* ===== タイムライン ===== */
+  .timeline { max-width: 760px; margin: 0 auto; }
+  .spot {
+    display: grid; grid-template-columns: 160px 1fr;
+    gap: 24px; padding: 24px 0; border-bottom: 1px solid #eee;
+    align-items: flex-start;
+  }
+  .spot-media {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .spot-photo {
+    width: 160px; height: 160px;
+    background: #e5e5e5; border: 1px dashed #bbb;
+    display: flex; align-items: center; justify-content: center;
+    color: #999; font-size: 11px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .spot-num {
+    display: none;
+  }
+  .spot-num.stay { display: none; }
+  .spot-title-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 8px;
+  }
+  .spot-title-row h4 {
+    flex: 1;
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 0 !important;
+  }
+  .spot-cat {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; flex-shrink: 0;
+  }
+  .spot-cat-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #222;
+  }
+  .spot-cat-name {
+    font-size: 9px; letter-spacing: 1.2px; color: #555;
+    font-weight: 700;
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .spot { grid-template-columns: 100px 1fr; gap: 16px; }
+    .spot-photo { width: 100px; height: 100px; }
+    .spot-cat-icon { width: 30px; height: 30px; }
+    .spot-cat-name { font-size: 8px; }
+  }
+  .spot-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .spot-genre { font-size: 11px; color: #999; margin-bottom: 6px; }
+  .spot-body p { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 6px; }
+  .spot-editor {
+    display: inline-block; background: #f5f5f5; border-left: 2px solid #222;
+    padding: 6px 12px; font-size: 12px; color: #444; line-height: 1.6; margin-top: 4px;
+  }
+  .spot-editor span { font-weight: 700; }
+  .spot-info {
+    font-size: 11px; color: #888; line-height: 1.8;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed #ddd;
+  }
+  .spot-info-row {
+    display: inline-block; margin-right: 14px;
+  }
+  .spot-info a { color: #666; text-decoration: underline; }
+  .spot-info a:hover { color: #222; }
+  .spot-drive {
+    text-align: center; padding: 8px; font-size: 11px; color: #bbb;
+  }
+  .spot-car-note {
+    text-align: center; padding: 4px 8px;
+    font-size: 10px; color: #aaa; letter-spacing: 1px;
+  }
+
+  /* ===== C5紹介（大型） ===== */
+  .car-hero {
+    border: 1px solid #ddd; max-width: 960px; margin: 0 auto 48px;
+  }
+  .car-hero-visual {
+    height: 400px;
+  }
+  .car-hero-body {
+    padding: 48px 40px;
+    text-align: left;
+  }
+  .car-hero-body h3 {
+    font-size: 24px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px;
+  }
+  .car-hero-body .car-lead {
+    font-size: 15px; color: #555; line-height: 2; margin-bottom: 40px;
+    max-width: 640px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid #ddd;
+  }
+  .feature-card {
+    padding: 40px 28px;
+    border-right: 1px solid #ddd;
+  }
+  .feature-card:last-child { border-right: none; }
+  .feature-card .feature-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #222; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .feature-card h4 {
+    font-size: 16px; font-weight: 700; margin-bottom: 4px;
+  }
+  .feature-card .feature-en {
+    font-size: 10px; letter-spacing: 2px; color: #999; margin-bottom: 16px;
+  }
+  .feature-card p {
+    font-size: 13px; color: #555; line-height: 1.9;
+  }
+  .feature-card .feature-scene {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee;
+    font-size: 12px; color: #888; line-height: 1.7;
+  }
+  .feature-card .feature-scene strong {
+    color: #555; font-weight: 600;
+  }
+
+  /* ===== フッター ===== */
+  .footer {
+    background: #222; color: #fff; padding: 40px 24px; text-align: center;
+  }
+  .footer-logos {
+    display: flex; justify-content: center; align-items: center;
+    gap: 32px; margin-bottom: 16px;
+  }
+  .footer-logos .f-logo { font-size: 14px; font-weight: 700; letter-spacing: 3px; }
+  .footer-logos .f-x { font-size: 11px; color: #666; }
+  .footer-links {
+    display: flex; justify-content: center; gap: 24px;
+    font-size: 11px; color: #888; margin-bottom: 16px;
+  }
+  .footer-copy { font-size: 10px; color: #555; }
+
+  /* ===== フローティングCTA ===== */
+  .floating-cta {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #222; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    z-index: 99;
+  }
+  .floating-cta p { color: #fff; font-size: 12px; letter-spacing: 1px; }
+  .floating-cta .cta-btn { padding: 10px 28px; font-size: 12px; background: #555; }
+
+  /* ===== スムーズスクロール ===== */
+  html { scroll-behavior: smooth; }
+
+  /* ===== スクロールアニメーション ===== */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-in.delay-1 { transition-delay: 0.1s; }
+  .fade-in.delay-2 { transition-delay: 0.2s; }
+  .fade-in.delay-3 { transition-delay: 0.3s; }
+
+  /* ===== ボタンホバー ===== */
+  .cta-btn { transition: opacity 0.2s, transform 0.15s; }
+  .cta-btn:hover { opacity: 0.8; }
+  .cta-btn:active { transform: scale(0.97); }
+  .nav-cta { transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* ===== ナビスクロール ===== */
+  .nav { transition: box-shadow 0.3s; }
+  .nav.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+  /* ===== フローティングCTA表示制御 ===== */
+  .floating-cta { transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
+  .floating-cta.hidden { transform: translateY(100%); }
+
+  /* ===== 戻りリンク ===== */
+  .nav-back {
+    font-size: 11px; color: #999; text-decoration: none;
+    letter-spacing: 1px; transition: color 0.2s;
+  }
+  .nav-back:hover { color: #222; }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 32px; }
+    .hero-title .d-mark { width: 40px; height: 40px; line-height: 40px; font-size: 28px; }
+    .spot-card { width: 240px; height: 160px; }
+    .spot-card-photo { width: 160px; }
+    .collab-section { grid-template-columns: 1fr; }
+    .collab-divider { height: 1px; width: 100%; }
+    .editor-card { flex-direction: column; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .car-in-context { grid-template-columns: 1fr; }
+    .hero-lead-headline { font-size: 15px !important; line-height: 1.6 !important; }
+    .hero-lead-main { font-size: 13px !important; }
+    .hero-lead-sub { font-size: 13px !important; }
+    .hero-lead-sub strong { font-size: 16px !important; }
+  }
+
+  /* ===== Ver2 追加スタイル ===== */
+  .hero-lead-headline {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 900; line-height: 1.7;
+    color: #222; margin-top: 32px;
+    letter-spacing: 0.5px;
+  }
+  .hero-lead-main {
+    font-size: 14px; font-weight: 500; line-height: 2;
+    color: #222; margin-top: 28px; letter-spacing: 0.5px;
+  }
+  .hero-lead-sub {
+    font-size: 14px; font-weight: 500; line-height: 2;
+    color: #222; margin-top: 24px; letter-spacing: 0.5px;
+  }
+  .hero-lead-sub strong {
+    font-weight: 900; color: #222;
+    font-size: 20px; letter-spacing: 1px;
+  }
+  .placeholder-note {
+    font-size: 11px !important;
+    color: #e60012 !important;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+    line-height: 1.7;
+  }
+  .new-badge {
+    display: inline-block;
+    background: #e60012; color: #fff;
+    padding: 10px 32px;
+    font-size: 15px; font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+  .version-badge {
+    display: inline-block; font-size: 9px;
+    color: #e60012; letter-spacing: 1px;
+    border: 1px solid #e60012; padding: 2px 6px;
+    margin-left: 8px; vertical-align: middle;
+    font-weight: 700;
+  }
+  .logo-pending {
+    font-size: 10px; color: #bbb;
+    letter-spacing: 1px; margin-top: 4px; display: block;
+  }
+  .logo-link {
+    color: inherit; text-decoration: none;
+    border-bottom: 1px dashed rgba(0,0,0,0.15);
+    padding-bottom: 2px;
+  }
+  .logo-link:hover { border-bottom-color: #222; }
+  .car-banner {
+    background: #111; padding: 140px 24px; text-align: center;
+  }
+  .car-banner-inner { max-width: 960px; margin: 0 auto; }
+  .car-banner-title {
+    color: #fff; font-size: 56px; font-weight: 900;
+    letter-spacing: 10px; margin-bottom: 56px; line-height: 1.2;
+  }
+  .car-banner-cta {
+    padding: 18px 56px; font-size: 15px;
+    background: transparent; border: 1px solid #fff; color: #fff;
+  }
+  .car-banner-cta:hover { background: #fff; color: #111; opacity: 1; }
+  .car-banner-note {
+    margin-top: 0 !important;
+    margin-bottom: 40px !important;
+    text-align: center;
+  }
+  @media (max-width: 768px) {
+    .car-banner { padding: 80px 24px; }
+    .car-banner-title { font-size: 32px; letter-spacing: 6px; margin-bottom: 40px; }
+  }
+
+  /* ===== Ver2 B案: d design travel × 編集長 大ブロック ===== */
+  .dtravel-block-wrap {
+    padding: 80px 24px;
+    background: #fff;
+  }
+  .dtravel-block {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 0;
+  }
+  .dtravel-block-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .dtravel-block-title {
+    font-size: 30px; font-weight: 900;
+    letter-spacing: 3px; line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .dtravel-block-title .d-small {
+    display: inline-block; background: #222; color: #fff;
+    width: 32px; height: 32px; line-height: 32px; text-align: center;
+    border-radius: 50%; font-size: 22px; font-weight: 900;
+    vertical-align: middle; margin: 0 2px;
+  }
+  .dtravel-block-visual {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .dtravel-cover {
+    aspect-ratio: 210 / 297;
+    background: #d8d8d8;
+    border: 1px dashed #b0b0b0;
+    display: flex; align-items: center; justify-content: center;
+    color: #888; font-size: 11px;
+    letter-spacing: 1px;
+    position: relative;
+  }
+  .dtravel-cover::before {
+    content: 'd design travel';
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    text-align: center;
+    font-size: 9px; color: #999;
+    letter-spacing: 1px;
+  }
+  .dtravel-block-visual-note {
+    text-align: center;
+    font-size: 11px; color: #999;
+    margin-bottom: 32px;
+    letter-spacing: 0.5px;
+  }
+  @media (max-width: 980px) {
+    .dtravel-block-visual { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  }
+  @media (max-width: 580px) {
+    .dtravel-block-visual { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  }
+  .dtravel-block-lead {
+    font-size: 22px; font-weight: 700;
+    line-height: 1.7; letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 24px;
+    color: #222;
+  }
+  .dtravel-block-body p {
+    font-size: 14px; line-height: 2.1; color: #444;
+    margin-bottom: 14px;
+  }
+  .dtravel-block-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .dtravel-block-tags span {
+    border: 1px solid #888;
+    padding: 5px 14px;
+    font-size: 11px; letter-spacing: 1px; color: #555;
+    border-radius: 20px;
+  }
+  .dtravel-block-divider {
+    height: 1px; background: #ddd;
+    margin: 48px auto;
+    max-width: 100%;
+  }
+  .dtravel-block-editor {
+    display: flex; gap: 32px; align-items: flex-start;
+  }
+  .dtravel-block-editor .editor-photo {
+    width: 180px; height: 220px; flex-shrink: 0;
+  }
+  .dtravel-block-editor .editor-info { flex: 1; }
+  .dtravel-block-editor .editor-eyebrow {
+    font-size: 10px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase; font-weight: 700;
+    display: block; margin-bottom: 8px;
+  }
+  .dtravel-block-editor h3 {
+    font-size: 24px; font-weight: 700; margin-bottom: 4px;
+  }
+  .dtravel-block-editor .role {
+    font-size: 12px; color: #999; letter-spacing: 1px; margin-bottom: 18px;
+  }
+  .dtravel-block-editor p {
+    font-size: 14px; color: #555; line-height: 2; margin-bottom: 16px;
+  }
+  .dtravel-block-editor blockquote {
+    font-size: 15px; font-weight: 500; color: #222; line-height: 1.9;
+    border-left: 3px solid #222; padding-left: 16px; margin: 0;
+  }
+  /* ===== カテゴリーアイコン（黒・横並び） ===== */
+  .category-icons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    max-width: 880px;
+    margin: 32px auto 0;
+    color: #222;
+  }
+  .cat-icon {
+    width: 84px;
+    height: 84px;
+    flex-shrink: 0;
+  }
+  .cat-icon-dot {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #222;
+    margin: 0 auto;
+  }
+  .cat-icon-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #888;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .cat-icon-desc {
+    display: block;
+    font-size: 12px;
+    color: #444;
+    margin-top: 6px;
+    line-height: 1.6;
+    text-align: center;
+    font-weight: 500;
+  }
+  .cat-icon-wrap { text-align: center; }
+  @media (max-width: 768px) {
+    .cat-icon { width: 56px; height: 56px; }
+    .cat-icon-dot { width: 44px; height: 44px; }
+    .category-icons { gap: 16px; }
+    .cat-icon-label { font-size: 10px; }
+  }
+
+  /* ===== コースタブ（横いっぱい均等配置・大きく） ===== */
+  .course-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 32px;
+  }
+  .course-tab {
+    flex: 1;
+    padding: 22px 16px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #999;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: color 0.2s, border-color 0.2s;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    font-family: inherit;
+  }
+  .course-tab:hover { color: #444; }
+  .course-tab.active {
+    color: #222;
+    border-bottom: 3px solid #222;
+  }
+  @media (max-width: 768px) {
+    .course-tab { font-size: 13px; padding: 16px 8px; letter-spacing: 0; }
+  }
+
+  /* ===== コースパネル切替 ===== */
+  .course-panel,
+  .timeline-panel {
+    display: none;
+  }
+  .course-panel.active,
+  .timeline-panel.active {
+    display: block;
+  }
+  /* ===== DAYトグル ===== */
+  .day-tabs {
+    display: flex; gap: 12px; justify-content: center;
+    margin: 0 auto 28px;
+  }
+  .day-tab {
+    padding: 10px 32px;
+    font-size: 13px; font-weight: 700;
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #888;
+    cursor: pointer;
+    border-radius: 999px;
+    letter-spacing: 2px;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .day-tab:hover { color: #444; border-color: #888; }
+  .day-tab.active {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+  }
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+  @media (max-width: 768px) {
+    .day-tab { padding: 8px 22px; font-size: 12px; letter-spacing: 1px; }
+  }
+  .course-stats {
+    display: flex; justify-content: center; gap: 24px;
+    margin-top: 16px; flex-wrap: wrap;
+  }
+  .course-stats span {
+    font-size: 11px; color: #999; letter-spacing: 1px;
+  }
+
+  /* ===== カルーセル直下のコース選択CTA ===== */
+  .hero-course-cta {
+    text-align: center;
+    padding: 28px 24px 36px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-course-cta-label {
+    font-size: 11px; letter-spacing: 4px; color: #888;
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .hero-course-cta-buttons {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .dtravel-block { padding: 24px 16px; }
+    .dtravel-block-title { font-size: 22px; letter-spacing: 2px; }
+    .dtravel-block-lead { font-size: 18px; }
+    .dtravel-block-visual { height: 220px; }
+    .dtravel-block-editor { flex-direction: column; align-items: center; text-align: center; }
+    .dtravel-block-editor .editor-info blockquote { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ナビ ===== -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 一覧</a>
+  <div class="nav-logo">CITROËN C5 AIRCROSS × d design travel<span class="version-badge">Ver4</span></div>
+  <button class="nav-cta">試乗予約 →</button>
+</nav>
+
+<!-- ===== 1. ヒーロー ===== -->
+<section class="hero">
+  <div class="hero-text">
+    <h1 class="hero-title">RECOVERY <span class="d-mark">d</span>RIVE</h1>
+    <p class="hero-lead-headline">
+      走るほどに快適なNEW C5 AIRCROSS。<br>
+      リカバリードライブで、新しい二人になる。
+    </p>
+    <p class="hero-lead-main">
+      子育てもひと段落して、気がつけば二人。<br>
+      さて何をしようか、何を話そうか。
+    </p>
+  </div>
+
+  <!-- カルーセル -->
+  <div class="carousel-wrap">
+    <div class="carousel-row row-1">
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">1</div>写真</div><div class="spot-card-body"><h4>HAGISO</h4><div class="genre">宿泊 / カフェ — 谷中</div><p>築60年の木造アパートをリノベした複合施設。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">2</div>写真</div><div class="spot-card-body"><h4>東京カテドラル</h4><div class="genre">建築 — 文京区</div><p>丹下健三の代表作。ステンレスの外装。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">3</div>写真</div><div class="spot-card-body"><h4>cox / Shingoster</h4><div class="genre">ギャラリー — つくば</div><p>宇宙船のようなコンクリート建築。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">4</div>写真</div><div class="spot-card-body"><h4>そばまさ</h4><div class="genre">食事 — 水戸</div><p>地元で愛される手打ち蕎麦の名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">5</div>写真</div><div class="spot-card-body"><h4>水戸芸術館</h4><div class="genre">建築 — 水戸</div><p>磯崎新設計。らせん状のタワー。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">6</div>写真</div><div class="spot-card-body"><h4>鈴木茂兵衛商店</h4><div class="genre">工芸 — 水戸</div><p>慶応元年創業。水府提灯。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">1</div>写真</div><div class="spot-card-body"><h4>HAGISO</h4><div class="genre">宿泊 / カフェ — 谷中</div><p>築60年の木造アパートをリノベした複合施設。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">2</div>写真</div><div class="spot-card-body"><h4>東京カテドラル</h4><div class="genre">建築 — 文京区</div><p>丹下健三の代表作。ステンレスの外装。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">3</div>写真</div><div class="spot-card-body"><h4>cox / Shingoster</h4><div class="genre">ギャラリー — つくば</div><p>宇宙船のようなコンクリート建築。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">4</div>写真</div><div class="spot-card-body"><h4>そばまさ</h4><div class="genre">食事 — 水戸</div><p>地元で愛される手打ち蕎麦の名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">5</div>写真</div><div class="spot-card-body"><h4>水戸芸術館</h4><div class="genre">建築 — 水戸</div><p>磯崎新設計。らせん状のタワー。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">6</div>写真</div><div class="spot-card-body"><h4>鈴木茂兵衛商店</h4><div class="genre">工芸 — 水戸</div><p>慶応元年創業。水府提灯。</p></div></div>
+    </div>
+    <div class="carousel-row row-2">
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">7</div>写真</div><div class="spot-card-body"><h4>サザコーヒー</h4><div class="genre">カフェ — ひたちなか</div><p>スペシャルティコーヒーの名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">8</div>写真</div><div class="spot-card-body"><h4>木内酒造</h4><div class="genre">酒蔵 — 那珂</div><p>常陸野ネストビールで知られる。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">9</div>写真</div><div class="spot-card-body"><h4>日立駅</h4><div class="genre">建築 — 日立</div><p>妹島和世設計。海に面したガラス張り。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">10</div>写真</div><div class="spot-card-body"><h4>山文魚</h4><div class="genre">食事 — 日立</div><p>あんこう鍋が絶品の魚料理店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">11</div>写真</div><div class="spot-card-body"><h4>里海邸 金波楼本邸</h4><div class="genre">宿泊 — 北茨城</div><p>明治創業の旅館再生。海と一体化。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">7</div>写真</div><div class="spot-card-body"><h4>サザコーヒー</h4><div class="genre">カフェ — ひたちなか</div><p>スペシャルティコーヒーの名店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">8</div>写真</div><div class="spot-card-body"><h4>木内酒造</h4><div class="genre">酒蔵 — 那珂</div><p>常陸野ネストビールで知られる。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">9</div>写真</div><div class="spot-card-body"><h4>日立駅</h4><div class="genre">建築 — 日立</div><p>妹島和世設計。海に面したガラス張り。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">10</div>写真</div><div class="spot-card-body"><h4>山文魚</h4><div class="genre">食事 — 日立</div><p>あんこう鍋が絶品の魚料理店。</p></div></div>
+      <div class="spot-card"><div class="spot-card-photo"><div class="spot-card-num">11</div>写真</div><div class="spot-card-body"><h4>里海邸 金波楼本邸</h4><div class="genre">宿泊 — 北茨城</div><p>明治創業の旅館再生。海と一体化。</p></div></div>
+    </div>
+  </div>
+
+  <div class="hero-course-cta">
+    <div class="hero-course-cta-label">CHOOSE YOUR COURSE</div>
+    <div class="hero-course-cta-buttons">
+      <a href="#course" class="cta-btn">東京スタート ↓</a>
+      <a href="#course" class="cta-btn cta-btn-outline">名古屋スタート ↓</a>
+      <a href="#course" class="cta-btn cta-btn-outline">大阪スタート ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. d design travel × 編集長 大ブロック（B案・統合訴求） ===== -->
+<section class="dtravel-block-wrap">
+  <div class="dtravel-block fade-in">
+    <div class="dtravel-block-header">
+      <h2 class="dtravel-block-title">
+        NEW C5 AIRCROSS &nbsp;×&nbsp; <span class="d-small">d</span> design travel
+      </h2>
+    </div>
+
+    <div class="dtravel-block-visual">
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+      <div class="dtravel-cover">vol. 00</div>
+    </div>
+    <p class="dtravel-block-visual-note">※ キービジュアル（仮）— d design travel 表紙サムネイル</p>
+
+    <p class="dtravel-block-lead">
+      デザインと感性を旅の軸に置く <strong>d design travel</strong>。
+    </p>
+
+    <div class="dtravel-block-body">
+      <p>
+        本質を追い求めるその眼差しに共感し、CITROËNは福井号から編集長の旅の相棒を務めています。
+      </p>
+      <p>
+        今回は、各地を旅しその土地をデザインの視点で発信し続ける編集長・神藤秀人氏に、
+        NEW C5 AIRCROSSの快適さを体感できるドライブコースを考案いただきました。
+        東京・名古屋・大阪、3つの起点から描かれたルートには、全国を旅する編集長の知識と知見が詰まっています。
+      </p>
+    </div>
+
+    <div class="dtravel-block-divider"></div>
+
+    <div class="dtravel-block-editor">
+      <div class="editor-photo placeholder">編集長 写真</div>
+      <div class="editor-info">
+        <span class="editor-eyebrow">COURSE DIRECTOR</span>
+        <h3>神藤 秀人</h3>
+        <div class="role">d design travel 編集長</div>
+        <p>47都道府県をくまなく取材し、「ロングライフデザイン」の視点で日本各地の魅力を発信し続ける編集者。地元の人が日常的に通う店、長く愛される建築、受け継がれる工芸 ——「観光」ではなく「その土地の暮らし」に触れる旅を提案している。</p>
+        <blockquote>「ドライブの旅は、電車では行けない場所に連れていってくれる。<br>今回は"寄り道"こそが目的のコースをつくりました。」</blockquote>
+        <p class="placeholder-note">※ 仮コピー（神藤編集長より受領次第差し替え / プロフィール 150〜200文字程度・コメント 40〜80文字程度）</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== 4. コースコンセプト（dトラベル6カテゴリー） ===== -->
+<section style="background:#fff;">
+  <div class="section" style="text-align:center;">
+    <p style="font-size:clamp(18px,2vw,22px); font-weight:700; line-height:1.7; letter-spacing:1px; color:#222; max-width:720px; margin:0 auto;">
+      NEW C5 AIRCROSSで、夫婦のリカバリードライブへ。<br>
+      さあ、もう一度ふたりで。
+    </p>
+
+    <div class="category-icons">
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">SIGHTS</span>
+        <span class="cat-icon-desc">その土地を知る</span>
+      </div>
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">RESTAURANTS</span>
+        <span class="cat-icon-desc">その土地で食事する</span>
+      </div>
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">CAFES</span>
+        <span class="cat-icon-desc">その土地でお茶をする<br>お酒を飲む</span>
+      </div>
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">SHOPS</span>
+        <span class="cat-icon-desc">その土地らしい買い物</span>
+      </div>
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">HOTELS</span>
+        <span class="cat-icon-desc">その土地に泊まる</span>
+      </div>
+      <div class="cat-icon-wrap">
+        <div class="cat-icon-dot"></div>
+        <span class="cat-icon-label">PEOPLE</span>
+        <span class="cat-icon-desc">その土地のキーマン</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. コースタブ + マップ ===== -->
+<div class="map-section" id="course">
+  <div class="course-tabs">
+    <button type="button" class="course-tab active" data-target="tokyo">東京スタート</button>
+    <button type="button" class="course-tab" data-target="nagoya">名古屋スタート</button>
+    <button type="button" class="course-tab" data-target="osaka">大阪スタート</button>
+  </div>
+
+  <div class="day-tabs">
+    <button type="button" class="day-tab active" data-day="day1">DAY 1</button>
+    <button type="button" class="day-tab" data-day="day2">DAY 2</button>
+  </div>
+
+  <div class="course-panel active" data-panel="tokyo">
+    <div class="day-panel active" data-day="day1">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（東京 → 茨城ルート / DAY 1）</div>
+      <div class="course-stats">
+        <span>初日</span>
+        <span>約250km</span>
+        <span>11スポット</span>
+        <span>東京 → 茨城</span>
+      </div>
+    </div>
+    <div class="day-panel" data-day="day2">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（茨城 → 笠間・益子・東京帰着 / DAY 2 ※ 仮）</div>
+      <div class="course-stats">
+        <span>2日目</span>
+        <span>約180km</span>
+        <span>4スポット</span>
+        <span>北茨城 → 笠間・益子 → 東京</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="course-panel" data-panel="nagoya">
+    <div class="day-panel active" data-day="day1">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（名古屋スタート / DAY 1 ※ 仮）</div>
+      <div class="course-stats">
+        <span>初日</span>
+        <span>テキスト</span>
+        <span>テキスト</span>
+        <span>名古屋 → テキストテキスト</span>
+      </div>
+    </div>
+    <div class="day-panel" data-day="day2">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（名古屋スタート / DAY 2 ※ 仮）</div>
+      <div class="course-stats">
+        <span>2日目</span>
+        <span>テキスト</span>
+        <span>テキスト</span>
+        <span>テキストテキスト → 名古屋</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="course-panel" data-panel="osaka">
+    <div class="day-panel active" data-day="day1">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（大阪スタート / DAY 1 ※ 仮）</div>
+      <div class="course-stats">
+        <span>初日</span>
+        <span>テキスト</span>
+        <span>テキスト</span>
+        <span>大阪 → テキストテキスト</span>
+      </div>
+    </div>
+    <div class="day-panel" data-day="day2">
+      <div class="placeholder" style="height:520px; width:100%;">Googleマイマップ埋め込み（大阪スタート / DAY 2 ※ 仮）</div>
+      <div class="course-stats">
+        <span>2日目</span>
+        <span>テキスト</span>
+        <span>テキスト</span>
+        <span>テキストテキスト → 大阪</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6. タイムライン（コース別） ===== -->
+<section style="padding:0 24px 64px;">
+  <div class="timeline-panel active" data-panel="tokyo">
+    <div class="day-panel active" data-day="day1">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>HAGISO</h4>
+          </div>
+          <div class="spot-genre">宿 — 東京都台東区谷中</div>
+          <p>築約60年の木造アパート「萩荘」をリノベーションした複合施設。設計は谷中を拠点に活動する「HAGI STUDIO」（最近では、日暮里駅近くのスターバックスなども手がけている）。ギャラリーやカフェ「HAGI CAFE」を併設し、谷中の文化拠点のような存在。前日から1泊してモーニングするのがおすすめです。東京の朝を、いつもと違う場所で迎えるのもいいものです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">東京都台東区谷中3-10-25</div>
+          <div class="spot-info-row">TEL: 03-5832-9808</div>
+          <div class="spot-info-row">HAGI CAFE 8:00～10:30（モーニング）ほか　不定休</div>
+          <div class="spot-info-row">1泊1名 6,000円～</div>
+          <div class="spot-info-row">駐車場: コインパーキングあり</div>
+          <div class="spot-info-row"><a href="https://hagiso.com/hagiso" target="_blank" rel="noopener">hagiso.com/hagiso</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約15分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>東京カテドラル聖マリア大聖堂</h4>
+          </div>
+          <div class="spot-genre">観光 — 東京都文京区関口</div>
+          <p>建築家・丹下健三による代表作（1964年）。ステンレスの外装と、十字架型の平面構成、内部の光の扱いが特徴的で協会の中でも群を抜いてスタイリッシュ。毎日行われるミサ（日曜がおすすめ）に参加して、より濃く、空間の雰囲気を感じ、神聖な気持ちで旅を始めてみてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">東京都文京区関口3-16-15</div>
+          <div class="spot-info-row">TEL: 03-3941-3029</div>
+          <div class="spot-info-row">9:00～17:00　無休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://catholic-sekiguchi.jp" target="_blank" rel="noopener">catholic-sekiguchi.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1時間</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>cox / Shingoster LIVING</h4>
+          </div>
+          <div class="spot-genre">カフェ・買い物 — 茨城県つくば市</div>
+          <p>茨城県つくば市にある、ギャラリーと生活空間が地続きになった場。宇宙船のようなコンクリート建築と、古民家が隣接するまさに新旧混在の"つくば"を象徴するようで、訪れる人も老若男女さまざま。笠間の作家・小林東洋氏の作品を見れる貴重なギャラリーで、そこで購入した器は今も大切に使っています。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県つくば市小野崎448-1</div>
+          <div class="spot-info-row">月曜・火曜休</div>
+          <div class="spot-info-row">喫茶/食事棟（cox）11:00～17:00 / TEL: 029-893-6075</div>
+          <div class="spot-info-row">gallery/store（Shingoster LIVING）13:00-18:00（企画展示中のみオープン） / TEL: 029-859-5127</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://shingoster.com" target="_blank" rel="noopener">shingoster.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1時間</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>そばまさ</h4>
+          </div>
+          <div class="spot-genre">食 — 茨城県水戸市</div>
+          <p>地元で親しまれる手打ち蕎麦の店。端正な蕎麦と落ち着いた佇まいで、水戸の日常に根ざした一軒。名物「つけけんちん」をぜひ食べてほしい。売り切れることもあるので、早めのランチに行ってください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県水戸市浜田1-2-45</div>
+          <div class="spot-info-row">TEL: 029-231-7398</div>
+          <div class="spot-info-row">11:00～14:00頃（売り切れ次第終了）日曜休み、他不定休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>水戸芸術館</h4>
+          </div>
+          <div class="spot-genre">観光 — 茨城県水戸市</div>
+          <p>建築家・磯崎新による設計。らせん状にねじれたシンボルタワーが特徴で、音楽・美術・演劇の複合文化施設。近づくにつれ、街の建物の間から覗くタワーにワクワクします。登って、水戸の街並みを見下ろしてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県水戸市五軒町1-6-8</div>
+          <div class="spot-info-row">TEL: 029-227-8111</div>
+          <div class="spot-info-row">10:00～18:00（施設により異なる）月曜休（祝日の場合は翌日）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.arttowermito.or.jp" target="_blank" rel="noopener">www.arttowermito.or.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>鈴木茂兵衛商店</h4>
+          </div>
+          <div class="spot-genre">買い物 — 茨城県水戸市</div>
+          <p>慶応元年（1865年）創業の提灯店。水戸の伝統工芸「水府提灯」を継承しながら、現代の暮らしに合う新しい提灯を提案している。茨城出身のアーティスト・ミックイタヤ氏とコラボレーションするなど、近年はインテリアやプロダクトとしての展開も進み、デザイン性の高いシリーズも多い。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県水戸市袴塚1-7-5</div>
+          <div class="spot-info-row">TEL: 029-221-3966</div>
+          <div class="spot-info-row">9:00～18:00　土・日曜、祝日休（夏季は変動あり）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.suzumo.com" target="_blank" rel="noopener">www.suzumo.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">CAFES</span>
+            </div>
+            <h4>サザコーヒー 本店</h4>
+          </div>
+          <div class="spot-genre">カフェ — 茨城県ひたちなか市</div>
+          <p>スペシャルティコーヒーの先駆的喫茶店。店舗ごとに空間デザインにも個性があり、地域文化と結びついています。常磐線沿線を中心に店を展開してきていましたが、勝田本店はとくに人気店。こんな店があったのか！？と驚きもありました。個人的には、いつも将軍コーヒーを頼みます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県ひたちなか市共栄町8-18</div>
+          <div class="spot-info-row">TEL: 029-270-1151</div>
+          <div class="spot-info-row">10:00～20:00 (L.O. 19:00)</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.saza.co.jp" target="_blank" rel="noopener">www.saza.co.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約15分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>木内酒造</h4>
+          </div>
+          <div class="spot-genre">買い物 — 茨城県那珂市</div>
+          <p>1823年創業の酒蔵。清酒「菊盛」にはじまり、クラフトビール「常陸野ネストビール」、近年は「日の丸ウイスキー」まで展開する、伝統と革新を併せ持つ酒造メーカー。見学や試飲ができる本店では、酒蔵の空気感そのものを体験できる。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県那珂市鴻巣1257</div>
+          <div class="spot-info-row">TEL: 029-270-7955</div>
+          <div class="spot-info-row">10:00～18:30（きき酒処は～17:00）不定休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://kiuchibrewery.co.jp" target="_blank" rel="noopener">kiuchibrewery.co.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>日立駅</h4>
+          </div>
+          <div class="spot-genre">観光 — 茨城県日立市</div>
+          <p>海に面したガラス張りの駅舎で、設計は茨城出身の建築家・妹島和世氏。水平に伸びる透明な空間と、太平洋の眺望が特徴で、駅というより展望所としてもお薦めです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県日立市幸町1-1-1</div>
+          <div class="spot-info-row">TEL: 050-2016-1600</div>
+          <div class="spot-info-row">無休</div>
+          <div class="spot-info-row">駐車場: コインパーキングあり</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約2分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>山文魚</h4>
+          </div>
+          <div class="spot-genre">食 — 茨城県日立市</div>
+          <p>割烹着姿の女将さんがもてなす魚料理店。神藤セレクトの居酒屋ベスト5に入ります。器や設えも素敵で、夕食を宿（里海邸）で取るか悩ましいところ。ランチもやっているので、ご都合に合わせて訪問してみてください。カワハギの鍋がすごく美味しかったんですが、この地域の名物であるあんこう鍋も絶品です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県日立市旭町2-3-14</div>
+          <div class="spot-info-row">TEL: 0294-21-0814</div>
+          <div class="spot-info-row">11:30～14:00／17:00～21:00（目安）</div>
+          <div class="spot-info-row">定休日: 不定休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>里海邸 金波楼本邸</h4>
+          </div>
+          <div class="spot-genre">宿 — 茨城県北茨城市</div>
+          <p>明治創業の旅館を再生した宿。設計はL PACK.などが関わり、海と一体化するような空間設計が特徴。茨城のアーティスト、ミック・イタヤさんの作品も飾られ、茨城ならではの宿です。那珂湊漁港から仕入れる焼き魚の朝食が今でも忘れられません（とくに味醂干し）。もちろん夕食も。海を眺めながら入れる大浴場もあるので、のんびりと過ごしてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県北茨城市磯原町磯原2553</div>
+          <div class="spot-info-row">TEL: 0293-43-1311</div>
+          <div class="spot-info-row">1泊朝食付き 23,050円～（2名1室）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.satoumitei.jp" target="_blank" rel="noopener">www.satoumitei.jp</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day1 -->
+
+    <div class="day-panel" data-day="day2">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 2</h3>
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">里海邸で朝食を済ませ、出発。</p>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>春風萬里荘（旧北大路魯山人邸）</h4>
+          </div>
+          <div class="spot-genre">観光 — 茨城県笠間市</div>
+          <p>陶芸家であり美食家でもあった北大路魯山人の旧邸を移築した施設。笠間の自然に囲まれた静かな環境の中で、建物や庭、展示を通して魯山人の美意識に触れることができます。器や食に関心がある人にとっては、特に印象に残る場所です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県笠間市下市毛1371</div>
+          <div class="spot-info-row">TEL: 0296-72-0958</div>
+          <div class="spot-info-row">9:30～17:00　月曜休（祝日の場合は翌日休）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.nichido-museum.or.jp/shunpu/" target="_blank" rel="noopener">www.nichido-museum.or.jp/shunpu/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>回廊ギャラリー門</h4>
+          </div>
+          <div class="spot-genre">買い物 — 栃木県芳賀郡益子町</div>
+          <p>ぐるっと一周笠間焼づくしのモダンな回廊ギャラリー。益子焼や作家ものもあり、一歩進むごとに出会うやきものに目を奪われます。器好きなら、つい何周も歩き回って長居してしまうはずです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町益子3278-1</div>
+          <div class="spot-info-row">TEL: 0285-72-3993</div>
+          <div class="spot-info-row">10:00～17:00　火・水曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.gallery-mon.co.jp" target="_blank" rel="noopener">www.gallery-mon.co.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">CAFES</span>
+            </div>
+            <h4>茶屋雨巻</h4>
+          </div>
+          <div class="spot-genre">食・カフェ — 栃木県芳賀郡益子町</div>
+          <p>山の麓にある小さな石窯ナポリピッツァ茶屋。益子焼の作陶展なども開催するこの土地らしい店です。まさにドライブで立ち寄りたくなる一軒。ピッツァは持ち帰りもできます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町上大羽堂ヶ入2356</div>
+          <div class="spot-info-row">TEL: 0285-72-7875</div>
+          <div class="spot-info-row">11:00～16:00　月・火曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.instagram.com/chaya.amamaki/" target="_blank" rel="noopener">www.instagram.com/chaya.amamaki/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>濱田庄司記念益子参考館</h4>
+          </div>
+          <div class="spot-genre">観光 — 栃木県芳賀郡益子町</div>
+          <p>民藝運動を代表する陶芸家の仕事と暮らしに触れられる場所。建物や庭、収蔵品すべてから、ものづくりの思想が伝わってきます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町益子3388</div>
+          <div class="spot-info-row">TEL: 0285-72-5300</div>
+          <div class="spot-info-row">9:30～17:00　月曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://mashiko-sankokan.net" target="_blank" rel="noopener">mashiko-sankokan.net</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約2分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>starnet</h4>
+          </div>
+          <div class="spot-genre">買い物・カフェ・食 — 栃木県芳賀郡益子町</div>
+          <p>益子焼や笠間焼など衣食住にまつわるものが揃うライフスタイルショップの先駆け。ギャラリー、ショップ、カフェが一体になっていて、自由度の高いお店です。もちろんランチをこっちで取っても◎</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町益子3278-1</div>
+          <div class="spot-info-row">TEL: 0285-72-9661</div>
+          <div class="spot-info-row">11:00～17:00　木曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.starnet-bkds.com" target="_blank" rel="noopener">www.starnet-bkds.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>民芸店ましこ</h4>
+          </div>
+          <div class="spot-genre">買い物 — 栃木県芳賀郡益子町</div>
+          <p>益子焼を中心に、各地の民藝品が並ぶお店。日常使いの器を探すにはぴったりで、つい手に取ってしまうものばかりです。周辺には益子焼を扱うお店が多いので、比べてお気に入りを探してみてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町益子706-2</div>
+          <div class="spot-info-row">TEL: 0285-72-3057</div>
+          <div class="spot-info-row">9:00～17:00　無休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.instagram.com/mingeiten_mashiko/" target="_blank" rel="noopener">www.instagram.com/mingeiten_mashiko/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約2分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>pejite</h4>
+          </div>
+          <div class="spot-genre">買い物 — 栃木県芳賀郡益子町</div>
+          <p>古家具や器、雑貨などを扱うセレクトショップ。オリジナルの益子焼もあって、神藤家は家具も器も実際にここのものを使ってます（笑）。空間づくりのセンスも含めて楽しめる場所で、益子の新しい一面を感じられます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">栃木県芳賀郡益子町益子973-6</div>
+          <div class="spot-info-row">TEL: 0285-81-5494</div>
+          <div class="spot-info-row">11:00～17:00　水・木曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.pejite-mashiko.com/top/" target="_blank" rel="noopener">www.pejite-mashiko.com/top/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約50分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">CAFES</span>
+            </div>
+            <h4>Coworking & Café yuinowa</h4>
+          </div>
+          <div class="spot-genre">観光・カフェ — 茨城県結城市</div>
+          <p>結城のデザイン観光の拠点になる複合スペース。ワークショップや展示もあり、地域とのつながりを感じられます。カフェでお茶しながら、次回の旅の予定をここで決めてもいいと思います。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県結城市結城183</div>
+          <div class="spot-info-row">TEL: 0296-47-5680</div>
+          <div class="spot-info-row">10:00～18:00　日・第1月曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://yuinowa.jp" target="_blank" rel="noopener">yuinowa.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ 徒歩</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>結城 澤屋</h4>
+          </div>
+          <div class="spot-genre">買い物 — 茨城県結城市</div>
+          <p>結城紬の産地問屋「奥順」が手がけるモダンなショップ。着物や帯、小物などを通して、結城紬の魅力に触れられる場所です。産地ならではの距離感で、素材や技術の背景まで感じられるのが面白い。購入だけでなく、"知るために立ち寄る"価値のある場所。「つむぎの館」とあわせて訪問してみてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県結城市結城12-2（つむぎの館内）</div>
+          <div class="spot-info-row">TEL: 0296-33-7047</div>
+          <div class="spot-info-row">9:30～17:00　火曜休（※つむぎの館に準ずる）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.yukisawaya.com" target="_blank" rel="noopener">www.yukisawaya.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">このあたりで帰りの渋滞を考え、帰路に着くのがお薦めです。もし、もう一泊できるならば以下がお薦めです。翌日の予定を「Coworking & Café yuinowa」で決めてみては？</p>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>HOTEL（TEN）</h4>
+          </div>
+          <div class="spot-genre">宿（オプション） — 茨城県結城市</div>
+          <p>築90年以上の町屋をリノベーションした一棟貸しの宿。チェックインはYUINOWAで行い、そのまま町に入り込むように滞在が始まります。観光というより、結城で"暮らすように泊まる"感覚。10人まで泊まれるので、他の夫婦と一緒にというのもいいです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県結城市結城162-1</div>
+          <div class="spot-info-row">1泊素泊まり（一棟貸し） 30,800円～</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://hotelten.studio.site" target="_blank" rel="noopener">hotelten.studio.site</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>御料理屋 kokyu.</h4>
+          </div>
+          <div class="spot-genre">食（オプション） — 茨城県結城市</div>
+          <p>珍しい形をした古民家を改装した日本料理店。静かな空間の中で、土地の食材を丁寧に仕立てた料理が味わえます。結城でゆっくり食事をするならここに限ります。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">茨城県結城市結城1085</div>
+          <div class="spot-info-row">TEL: 0296-48-8388</div>
+          <div class="spot-info-row">12:00～14:00／18:00～20:30　月・火休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://kokyu.in" target="_blank" rel="noopener">kokyu.in</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day2 -->
+  </div><!-- /timeline-panel tokyo -->
+
+  <div class="timeline-panel" data-panel="nagoya">
+    <div class="day-panel active" data-day="day1">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">名古屋駅を8:00に出発し、熱田神宮へ。まずはお参りし、朝食をいただきます。</p>
+
+      <div class="spot-drive">↓ C5エアクロスで約20分＋徒歩約10分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>宮きしめん 熱田神宮店</h4>
+          </div>
+          <div class="spot-genre">食 — 愛知県名古屋市熱田区</div>
+          <p>熱田神宮の境内にある、名古屋名物きしめんの定番店。緑に囲まれた開放的な空間で食べる一杯は、味そのもの以上に体験として記憶に残ります。ドライブの祈願がてらぜひ朝食からスタートしてみてください。しょうゆつくとおすましつゆの食べ比べもおすすめ。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">愛知県名古屋市熱田区神宮1-1-1（熱田神宮境内）</div>
+          <div class="spot-info-row">TEL: 052-682-6340</div>
+          <div class="spot-info-row">9:00～16:30（L.O.）　年中無休</div>
+          <div class="spot-info-row"><a href="https://www.miyakishimen.co.jp/jingu/" target="_blank" rel="noopener">www.miyakishimen.co.jp/jingu/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>瀬戸・ものづくりと暮らしのミュージアム［瀬戸民藝館］</h4>
+          </div>
+          <div class="spot-genre">観光・買い物 — 愛知県瀬戸市</div>
+          <p>愛知・瀬戸の洞地区にある、瀬戸焼に焦点を当てた新しい民藝館。瀬戸本業窯の敷地内にあって、ものづくりの現場も見学でき、民藝の本質に触れられる場所。併設のショップでは、瀬戸本業窯の器や暮らしの道具も購入できます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">愛知県瀬戸市東洞町17</div>
+          <div class="spot-info-row">TEL: 0561-21-3773</div>
+          <div class="spot-info-row">10:00～16:30（最終受付16:00）　月～水休（祝日は営業）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.setomingeikan-museum.jp" target="_blank" rel="noopener">www.setomingeikan-museum.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約20分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>多治見市モザイクタイルミュージアム</h4>
+          </div>
+          <div class="spot-genre">観光 — 岐阜県多治見市</div>
+          <p>土の山のような外観が印象的な、タイルに特化したミュージアム。設計は藤森照信で、建築そのものがすでに展示の一部のよう。日常の中で使われてきたモザイクタイルの歴史や表現をたどりながら、その魅力をあらためて見つめ直すことができます。屋上からの眺めも気持ちよく、短い滞在でもしっかり記憶に残る場所です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県多治見市笠原町2082-5</div>
+          <div class="spot-info-row">TEL: 0572-43-5101</div>
+          <div class="spot-info-row">9:00～17:00（最終入館16:30）　月曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.mosaictile-museum.jp" target="_blank" rel="noopener">www.mosaictile-museum.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>ギャルリももぐさ</h4>
+          </div>
+          <div class="spot-genre">買い物・食・カフェ — 岐阜県多治見市</div>
+          <p>名古屋市鳴海から民家を移築し、陶芸家・安藤雅信さんが始めたギャラリー。ご自身が作る器をはじめ、さまざまな工芸、現代作家の展示を中心に、静かで凛とした空間の中で作品に出会えます。2026年5月からは、併設のカフェスペースに「Oya」がオープン。ランチは予約可。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県多治見市東町4-2-6</div>
+          <div class="spot-info-row">TEL: 0572-21-1144</div>
+          <div class="spot-info-row">11:00～17:00　月・火曜休</div>
+          <div class="spot-info-row"><a href="https://momogusa.jp" target="_blank" rel="noopener">momogusa.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">CAFES</span>
+            </div>
+            <h4>コクウ珈琲</h4>
+          </div>
+          <div class="spot-genre">カフェ — 岐阜県多治見市</div>
+          <p>住宅街の中にひっそりと佇む珈琲店。丁寧に淹れられる一杯と、静かな時間が流れる空間が心地よく、つい長居してしまいます。すぐ近くの美濃太田駅から水戸岡鋭治氏デザインの観光列車「ながら」に乗って岐阜観光もお薦め。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県多治見市笠原町2081-2</div>
+          <div class="spot-info-row">TEL: 0572-43-5611</div>
+          <div class="spot-info-row">10:00～18:00　火・水曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.cocu-coffee.com" target="_blank" rel="noopener">www.cocu-coffee.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約20分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>岐阜現代美術館 桃紅館</h4>
+          </div>
+          <div class="spot-genre">観光 — 岐阜県関市</div>
+          <p>美術家・篠田桃紅の作品を中心に紹介する美術館。墨による抽象表現を軸に、静けさと緊張感が同居する空間が広がります。余白や線の美しさにじっくりと向き合う時間は、他の展示とは少し違う感覚をもたらしてくれます。建物や庭も含めて、全体でひとつの作品のように感じられる場所です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県関市小屋名1989</div>
+          <div class="spot-info-row">TEL: 0575-28-3100</div>
+          <div class="spot-info-row">10:00～16:00　日曜・祝日休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.gi-co-ma.or.jp/about/toko-gallery/" target="_blank" rel="noopener">www.gi-co-ma.or.jp/about/toko-gallery/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>株式会社オゼキ</h4>
+          </div>
+          <div class="spot-genre">観光・買い物 — 岐阜県美濃市</div>
+          <p>岐阜・美濃を拠点に、和紙製品を手がけるメーカー。提灯や照明、インテリアなど、伝統的な技術を活かしながら現代の暮らしに馴染むプロダクトを展開しています。工場見学では、和紙の扱いや構造の工夫など、実際のものづくりの現場に触れることができ、製品の背景がより立体的に見えてきます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県美濃市常盤町2471-1</div>
+          <div class="spot-info-row">TEL: 0575-33-0333</div>
+          <div class="spot-info-row">9:00～17:00　土・日曜・祝日休（見学は要予約）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.ozeki-lantern.co.jp" target="_blank" rel="noopener">www.ozeki-lantern.co.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>山本佐太郎商店</h4>
+          </div>
+          <div class="spot-genre">買い物 — 岐阜県岐阜市</div>
+          <p>大正時代創業の油問屋。現在は国産原料にこだわった菜種油や、昔ながらの製法を活かしたお菓子なども手がけ、食の風景を次の世代へつなげています。派手さはないけれど、日々の暮らしに寄り添う"あたりまえ"の質を丁寧に守り続けている存在。直営店では商品を手に取りながら、その背景にある考え方にも触れることができます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">岐阜県岐阜市松屋町17</div>
+          <div class="spot-info-row">TEL: 058-262-0432</div>
+          <div class="spot-info-row">9:30～17:30　日曜・祝日休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.instagram.com/yamamotosataroshoten/" target="_blank" rel="noopener">www.instagram.com/yamamotosataroshoten/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1時間</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>MARUYO HOTEL</h4>
+          </div>
+          <div class="spot-genre">宿 — 三重県桑名市</div>
+          <p>伊勢神宮の最初の鳥居「一の鳥居」がある場所。「七里の渡し」で知られる桑名市船馬町に建つ、築70年以上の材木屋本家をリノベーションした一棟貸しの宿です。桑名産のはまぐりを使った料理が絶品！ギャラリストでもあるオーナーのセンスが光る空間は、ぜひ泊まって体感してみてください。ギフトも充実。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県桑名市北鍋屋町9</div>
+          <div class="spot-info-row">TEL: 0594-22-0100</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.maruyohotel.com" target="_blank" rel="noopener">www.maruyohotel.com</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day1 -->
+
+    <div class="day-panel" data-day="day2">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 2</h3>
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">「まるよホテル」を出発し、伊勢路へとC5を走らせます。</p>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>BANKO archive design museum</h4>
+          </div>
+          <div class="spot-genre">観光 — 三重県四日市市</div>
+          <p>四日市の伝統工芸「萬古焼」を紹介する陶芸家・内田剛一さんの私設ミュージアム。急須や土鍋など、日常に根ざした器の歴史と技術を知ることができます。ユニークなキュレーションにより、産業としての広がりと、暮らしとの距離の近さ、その両方が見えてくる場所。カフェもあります。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県四日市市陶栄町4-8</div>
+          <div class="spot-info-row">TEL: 059-330-2020</div>
+          <div class="spot-info-row">10:00～17:00　月曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.banko-a-d-museum.com" target="_blank" rel="noopener">www.banko-a-d-museum.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>而今禾 Jikonka SEKI 中町店</h4>
+          </div>
+          <div class="spot-genre">買い物・食 — 三重県亀山市関町</div>
+          <p>東海道五十三次の宿場町として栄えた歴史を持つ関宿の町並みに溶け込むライフスタイルショップ。三重県のものに限らず、衣・食・住にまつわるものを丁寧に選び、静かな空間の中で提案しています。暮らしの質を見直したくなるような場所。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県亀山市関町中町387</div>
+          <div class="spot-info-row">TEL: 0595-96-0113</div>
+          <div class="spot-info-row">11:00～17:00　火・水曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.instagram.com/jikonka_seki/" target="_blank" rel="noopener">www.instagram.com/jikonka_seki/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>かねき伊藤彦市商店</h4>
+          </div>
+          <div class="spot-genre">買い物 — 三重県亀山市関町</div>
+          <p>東海道の宿場町・関宿にある、慶應元年（1865年）創業の伊勢茶問屋。三重県産の茶葉にこだわり、独自の製法で仕立てたお茶を扱っています。茶葉の販売だけでなく、体験や企画も。お茶好きの方、伊勢茶のことを知りたい方は、ぜひ。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県亀山市関町中町390</div>
+          <div class="spot-info-row">TEL: 0595-96-0357</div>
+          <div class="spot-info-row">10:00～17:00　水・日曜休</div>
+          <div class="spot-info-row"><a href="https://www.kaneki-isecha.com" target="_blank" rel="noopener">www.kaneki-isecha.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約50分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>Restaurant Cultivate</h4>
+          </div>
+          <div class="spot-genre">食 — 三重県松阪市</div>
+          <p>中国料理をベースにした、モダンでカジュアルなレストラン。三重の食材をふんだんに使い、洗練された一皿へと落とし込んでいます。美しい器の数々もこの店の魅力のひとつ。ギャラリーも併設されており、店で使用されている作家の器に出会えるのも嬉しいポイントです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県松阪市嬉野下之庄町1688-5</div>
+          <div class="spot-info-row">TEL: 0598-31-2088</div>
+          <div class="spot-info-row">ランチ 11:30～15:00（L.O.13:30）</div>
+          <div class="spot-info-row">ディナー（要予約）18:00～21:00（L.O.20:00）</div>
+          <div class="spot-info-row">火・水曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.cultivate.jp" target="_blank" rel="noopener">www.cultivate.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約25分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>伊勢神宮外宮</h4>
+          </div>
+          <div class="spot-genre">観光 — 三重県伊勢市</div>
+          <p>食と産業の神を祀る外宮。静かな空気の中で、日々の営みに近い祈りを感じることができます。まずはこちらから参拝するのが習わし。モダンなミュージアムもあるので、内宮とともに、時間をたっぷり取って行ってください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県伊勢市豊川町279</div>
+          <div class="spot-info-row">参拝時間: 季節により変動（要確認）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.isejingu.or.jp" target="_blank" rel="noopener">www.isejingu.or.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約10分＋徒歩5分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">CAFES</span>
+            </div>
+            <h4>赤福本店</h4>
+          </div>
+          <div class="spot-genre">カフェ — 三重県伊勢市</div>
+          <p>伊勢を代表する和菓子「赤福」の本店。趣ある建物の中で、できたてをその場でいただく体験は、旅の記憶として強く残ります。毎月一日には「一日餅」が購入できるので、それにあわせて訪れるのもおすすめです。江戸時代から旅人を迎え入れてきた、そのおもてなしも味わってみてください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県伊勢市宇治中之切町26</div>
+          <div class="spot-info-row">TEL: 0596-22-7000</div>
+          <div class="spot-info-row">5:00～17:00　無休</div>
+          <div class="spot-info-row">駐車場: コインパーキング</div>
+          <div class="spot-info-row"><a href="https://www.akafuku.co.jp" target="_blank" rel="noopener">www.akafuku.co.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ 徒歩10分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>伊勢神宮内宮</h4>
+          </div>
+          <div class="spot-genre">観光 — 三重県伊勢市</div>
+          <p>天照大御神を祀る、日本を代表する神社。五十鈴川の流れや森の空気に包まれながら歩く時間は、どこか特別なもの。外宮から続けて訪れてほしい。事前にホームページで伊勢神宮のことを予習していくと何倍も楽しめます。（ちなみに、夫婦で行くには覚悟が必要）</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県伊勢市宇治館町1</div>
+          <div class="spot-info-row">参拝時間: 季節により変動（要確認）</div>
+          <div class="spot-info-row">駐車場: あり（参道の手前のパーキングに停め、歩いて「赤福本店」に寄りつつ向かうのがいい）</div>
+          <div class="spot-info-row"><a href="https://www.isejingu.or.jp" target="_blank" rel="noopener">www.isejingu.or.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">伊勢神宮を後にし、名古屋へ戻る際、「VISON」で買い物してもいいです。翌日の都合に合わせ、VISONで宿泊してもいいし、以下のように志摩に泊まってもいいと思います。</p>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>鳥羽市立海の博物館</h4>
+          </div>
+          <div class="spot-genre">観光（オプション） — 三重県鳥羽市</div>
+          <p>海と人との関わりをテーマにした博物館。漁業や海女文化など、伊勢志摩の暮らしを多角的に知ることができます。虎屋赤坂店などで知られる内藤廣氏設計の建築も印象的で、展示と空間の両方が記憶に残ります。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県鳥羽市浦村町大吉1731-68</div>
+          <div class="spot-info-row">TEL: 0599-32-6006</div>
+          <div class="spot-info-row">9:00～17:00　年中無休（※展示替え休あり）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.umihaku.com" target="_blank" rel="noopener">www.umihaku.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>志摩観光ホテル ザ クラシック</h4>
+          </div>
+          <div class="spot-genre">宿（オプション） — 三重県志摩市</div>
+          <p>昭和を代表する村野藤吾氏設計の英虞湾を望むリゾートホテル。伊勢海老や鮑をはじめ、伊勢志摩の食材を活かした料理とともに、ゆったりとした時間を過ごせます。旅の締めくくりにふさわしい、少し特別な滞在になるでしょう。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">三重県志摩市阿児町神明731</div>
+          <div class="spot-info-row">TEL: 0599-43-1211</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.miyakohotels.ne.jp/shima/" target="_blank" rel="noopener">www.miyakohotels.ne.jp/shima/</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day2 -->
+  </div><!-- /timeline-panel nagoya -->
+
+  <div class="timeline-panel" data-panel="osaka">
+    <div class="day-panel active" data-day="day1">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 1</h3>
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>RIHGA Royal Hotel Osaka</h4>
+          </div>
+          <div class="spot-genre">宿 — 大阪府大阪市北区中之島</div>
+          <p>日本を代表する大阪の老舗ホテルに前日入りです。建築家・吉田五十八の系譜を感じさせる重厚な空間構成の中に、時代ごとの改修が重ねられています。館内には多様なレストランやバーが点在し、都市の中にもうひとつの街のような機能を持つのも特徴。日本民芸最高峰のコレクションを擁するリーチバーもお薦め。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">大阪府大阪市北区中之島5-3-68</div>
+          <div class="spot-info-row">TEL: 06-6448-1121</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.rihga.co.jp/osaka" target="_blank" rel="noopener">www.rihga.co.jp/osaka</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで30分以内</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>御舟かもめ</h4>
+          </div>
+          <div class="spot-genre">観光 — 大阪府大阪市</div>
+          <p>淀川や大川、道頓堀川など大阪の川を巡る小さな観光船。観光というよりも、都市を"編集し直して眺める"ような体験ができ、「水上」という異なるレイヤーから大阪の魅力を改めて感じてみてください。朝ごはんクルーズもあるので、時間に余裕を持ってぜひ。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">大阪府大阪市中央区道頓堀周辺</div>
+          <div class="spot-info-row">TEL: 06-6125-2539</div>
+          <div class="spot-info-row">運航時間: 日によって変動　不定休</div>
+          <div class="spot-info-row">駐車場: なし</div>
+          <div class="spot-info-row"><a href="https://ofune-camome.net" target="_blank" rel="noopener">ofune-camome.net</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>万博記念公園</h4>
+          </div>
+          <div class="spot-genre">観光 — 大阪府吹田市</div>
+          <p>言わずと知れた大阪万博の跡地を再編した広大な公園。岡本太郎による「太陽の塔」を中心に、当時のパビリオン配置や動線が現在のランドスケープにも反映されていて、高度経済成長期の思想と現代の公共空間が重なり合う、日本の都市計画のひとつの記録でもある場所です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">大阪府吹田市千里万博公園</div>
+          <div class="spot-info-row">TEL: 06-6877-7387</div>
+          <div class="spot-info-row">9:30～17:00　無休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.expo70-park.jp" target="_blank" rel="noopener">www.expo70-park.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ 徒歩圏内</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>大阪日本民芸館</h4>
+          </div>
+          <div class="spot-genre">観光 — 大阪府吹田市</div>
+          <p>柳宗悦の思想を背景に、日本各地の民芸品を収蔵・展示する施設。建築は吉田五十八の設計によるもので、数寄屋建築の要素を取り入れながら、展示と空間が静かに呼応する構成になっています。生活の中に宿る用の美を、空間ごと体験できる場所。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">大阪府吹田市千里万博公園10-5</div>
+          <div class="spot-info-row">TEL: 06-6877-1971</div>
+          <div class="spot-info-row">10:00～17:00　水曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.mingeikan-osaka.or.jp" target="_blank" rel="noopener">www.mingeikan-osaka.or.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約50分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>D&DEPARTMENT KYOTO</h4>
+          </div>
+          <div class="spot-genre">食・買い物・カフェ — 京都府京都市</div>
+          <p>ロングライフデザインを提案するD&DEPARTMENT PROJECTの京都拠点。佛光寺という寺の境内にあるのも魅力で、京都という土地に合わせて編集されたプロダクトや食品が並び、併設の食堂では地域の食材を使ったメニューも提供されます。ランチはここで。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">京都府京都市下京区高橋町605</div>
+          <div class="spot-info-row">TEL: 075-343-3217</div>
+          <div class="spot-info-row">11:00～18:00　水曜休</div>
+          <div class="spot-info-row">駐車場: コインパーキングあり</div>
+          <div class="spot-info-row"><a href="https://www.d-department.com" target="_blank" rel="noopener">www.d-department.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約50分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>佐川美術館</h4>
+          </div>
+          <div class="spot-genre">観光 — 滋賀県守山市</div>
+          <p>水庭に囲まれた建築が象徴的なザ・デザイン美術館。設計は竹中工務店。水面と建築が一体化する構成により、展示空間そのものがひとつの作品のように機能している。「樂吉左衞門館」では、地下に広がる空間と光の使い方が印象的です。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県守山市水保町北川2891</div>
+          <div class="spot-info-row">TEL: 077-585-7800</div>
+          <div class="spot-info-row">9:30～17:00　月曜休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.sagawa-artmuseum.or.jp" target="_blank" rel="noopener">www.sagawa-artmuseum.or.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約1時間</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>和ろうそく大與</h4>
+          </div>
+          <div class="spot-genre">買い物 — 滋賀県高島市</div>
+          <p>1914年創業の和ろうそくの工房。櫨蝋を使い、手仕事で一本ずつ仕立てる伝統技術を守り続けています。炎の揺らぎや光の質まで含めて設計されたデザインプロダクトであり、現代の暮らしにどう取り入れるかという提案も行っています。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県高島市今津町住吉2-5-8</div>
+          <div class="spot-info-row">TEL: 0740-22-0557</div>
+          <div class="spot-info-row">9:00～17:00（土・日曜・祝日は要予約）</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://warousokudaiyo.com" target="_blank" rel="noopener">warousokudaiyo.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約15分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>湖里庵</h4>
+          </div>
+          <div class="spot-genre">宿 — 滋賀県長浜市</div>
+          <p>琵琶湖の北、静かな湖岸に佇む「鮒寿し 魚治」による日本料理店。1日1組限定で宿泊もできるので、宿泊はこちらで。目の前に広がる琵琶湖の風景と料理が一体となる設計は、ここにしかありません。七代目による「鮒寿し懐石」は超絶品で、鮒鮨初心者にこそお薦めします。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県長浜市湖北町尾上313-13</div>
+          <div class="spot-info-row">TEL: 0749-79-1117</div>
+          <div class="spot-info-row">11:30～（要予約）　不定休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://www.korian.jp" target="_blank" rel="noopener">www.korian.jp</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day1 -->
+
+    <div class="day-panel" data-day="day2">
+    <div class="timeline">
+      <h3 style="font-size:12px; letter-spacing:2px; color:#999; margin-bottom:20px;">DAY 2</h3>
+      <p style="font-size:13px; color:#555; line-height:1.9; margin:24px 0; padding:16px 20px; background:#f9f9f9; border-left:3px solid #ccc;">湖里庵で朝食を取り、10:00ごろに出発。琵琶湖を右回りで巡ります。少し早めに出発して、「富田酒造」で地酒を買ってから南下してもいいです。ちなみに、「七本槍」は、神藤大好きな銘柄の一つです。</p>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>湖のスコーレ</h4>
+          </div>
+          <div class="spot-genre">買い物 — 滋賀県長浜市</div>
+          <p>長浜の古い町並みの中にある複合施設。運営は「黒壁」などを手がける地域のプレイヤーが関わり、既存建築を活かしながら、食・道具・学びを横断する場として再編集されている。醸造家・ハッピー太郎さんが味噌や甘酒、どぶろくを作る醸造所も併設。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県長浜市元浜町13-29</div>
+          <div class="spot-info-row">TEL: 0749-53-3401</div>
+          <div class="spot-info-row">10:00～18:00　火曜定休</div>
+          <div class="spot-info-row">駐車場: なし</div>
+          <div class="spot-info-row"><a href="https://umi-no-schole.jp" target="_blank" rel="noopener">umi-no-schole.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約30分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>& Anne</h4>
+          </div>
+          <div class="spot-genre">買い物 — 滋賀県彦根市</div>
+          <p>滋賀・彦根の商店街にある、洋菓子・書店・ギャラリーが一体となった複合空間。老舗和菓子店「菓心おおすが」が手がけており、既存の商店街の空き店舗を利活用している。単なる物販ではなく、長く滞在しながら選ぶことを前提とした空間設計が印象的で、地域の日常に開かれた文化的拠点として機能しています。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県彦根市中央町4-35</div>
+          <div class="spot-info-row">TEL: 0749-22-5288</div>
+          <div class="spot-info-row">10:30～18:00　水・木曜定休</div>
+          <div class="spot-info-row">駐車場: あり（菓心おおすがと共用）</div>
+          <div class="spot-info-row"><a href="https://www.and-anne.com" target="_blank" rel="noopener">www.and-anne.com</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約2分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">RESTAURANTS</span>
+            </div>
+            <h4>サンバーガー&彦根クレープ</h4>
+          </div>
+          <div class="spot-genre">食 — 滋賀県彦根市</div>
+          <p>近江牛を使ったハンバーガーショップ。朝食がしっかり取れているので、このくらいライトな昼食でもいいと思います。おおすがからも近く、近くには「半月舎」という書店もあります。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県彦根市立花町3-3</div>
+          <div class="spot-info-row">TEL: 090-7104-0510</div>
+          <div class="spot-info-row">11:00～20:00　木曜休</div>
+          <div class="spot-info-row">駐車場: 未確認</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約40分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SHOPS</span>
+            </div>
+            <h4>ラ コリーナ近江八幡</h4>
+          </div>
+          <div class="spot-genre">買い物・カフェ — 滋賀県近江八幡市</div>
+          <p>和菓子店たねや・クラブハリエのフラッグシップ。建築は藤森照信。草屋根の建築群とランドスケープが一体となり、食と自然、建築が連続する体験をつくっています。商業施設でありながら、独特な世界観に引き込まれます。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">滋賀県近江八幡市北之庄町615-1</div>
+          <div class="spot-info-row">TEL: 0748-33-6666</div>
+          <div class="spot-info-row">9:00～18:00　年中無休</div>
+          <div class="spot-info-row">駐車場: あり</div>
+          <div class="spot-info-row"><a href="https://taneya.jp/la_collina/" target="_blank" rel="noopener">taneya.jp/la_collina/</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約70分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>河井寛次郎記念館</h4>
+          </div>
+          <div class="spot-genre">観光 — 京都府京都市</div>
+          <p>陶芸家・河井寛次郎の旧居兼仕事場を公開した記念館。自ら設計にも関わった建物は、登り窯や吹き抜けの空間を中心に、生活と制作が一体となった構造になっている。民藝運動の思想を体現するように、器や家具、建築の細部に至るまで"用の美"が貫かれており、作品を見るだけでなく、その背景にある暮らしごと体感できる場所。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">京都府京都市東山区五条坂鐘鋳町569</div>
+          <div class="spot-info-row">TEL: 075-561-3585</div>
+          <div class="spot-info-row">10:00～17:00　月曜休（祝日の場合は翌日）</div>
+          <div class="spot-info-row">駐車場: なし</div>
+          <div class="spot-info-row"><a href="https://www.kanjiro.jp" target="_blank" rel="noopener">www.kanjiro.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約10分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">SIGHTS</span>
+            </div>
+            <h4>サウナの梅湯</h4>
+          </div>
+          <div class="spot-genre">観光 — 京都府京都市</div>
+          <p>銭湯活動家の湊三次郎さんの最初に手がけた銭湯で、銭湯文化を現代的に再解釈しています。設備だけでなく、コミュニティーとしての場づくりが重視してあり、ローカルと外部の人が自然に混ざり合う空間設計も特徴。運転の疲れを癒してください。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">京都府京都市下京区岩滝町175</div>
+          <div class="spot-info-row">TEL: 080-2523-0626</div>
+          <div class="spot-info-row">朝6:00～26:00　木曜休</div>
+          <div class="spot-info-row">駐車場: なし</div>
+          <div class="spot-info-row"><a href="https://umeyu.jp" target="_blank" rel="noopener">umeyu.jp</a></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="spot-drive">↓ C5エアクロスで約10分</div>
+
+      <div class="spot">
+        <div class="spot-media">
+          <div class="spot-photo">写真</div>
+        </div>
+        <div class="spot-body">
+          <div class="spot-title-row">
+            <div class="spot-cat">
+              <div class="spot-cat-icon"></div>
+              <span class="spot-cat-name">HOTELS</span>
+            </div>
+            <h4>京の宿 石原</h4>
+          </div>
+          <div class="spot-genre">宿 — 京都府京都市</div>
+          <p>京都でもう一泊するならば、築100年の町屋旅館へ。黒沢明監督が愛した宿で、当時の貴重な品々も展示しています。そんな「黒澤ルーム」もお薦めですが、モダンな「蔵」もユニークで楽しいです。</p>
+        <div class="spot-info">
+          <div class="spot-info-row">京都府京都市中京区柳八幡町76</div>
+          <div class="spot-info-row">TEL: 075-221-5612</div>
+          <div class="spot-info-row">不定休</div>
+          <div class="spot-info-row">駐車場: なし</div>
+          <div class="spot-info-row"><a href="https://kyotoishihara.com" target="_blank" rel="noopener">kyotoishihara.com</a></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /day-panel day2 -->
+  </div><!-- /timeline-panel osaka -->
+
+  <div class="day-tabs day-tabs-bottom" style="max-width:960px; margin:32px auto 0;">
+    <button type="button" class="day-tab active" data-day="day1">DAY 1</button>
+    <button type="button" class="day-tab" data-day="day2">DAY 2</button>
+  </div>
+</section>
+
+<!-- ===== 7. NEW C5 AIRCROSS ビッグバナー ===== -->
+<section class="car-banner fade-in">
+  <div class="car-banner-inner">
+    <p class="placeholder-note car-banner-note">※ このエリアにキャンペーンのキービジュアルが入ります（仮：黒背景）</p>
+    <div class="car-banner-title">NEW C5 AIRCROSS</div>
+    <a href="#" class="cta-btn car-banner-cta">試乗を予約する →</a>
+  </div>
+</section>
+
+<!-- ===== 8. フッター ===== -->
+<footer class="footer">
+  <div class="footer-logos">
+    <span class="f-logo">CITROËN</span>
+    <span class="f-x">×</span>
+    <span class="f-logo" style="font-size:13px;">d design travel</span>
+  </div>
+  <div class="footer-links">
+    <span>CITROËN 公式サイト</span>
+    <span>d design travel</span>
+    <span>ディーラー検索</span>
+    <span>Instagram</span>
+  </div>
+  <div class="footer-copy">&copy; 2026 CITROËN JAPON × D&DEPARTMENT PROJECT. All rights reserved.</div>
+</footer>
+
+<!-- ===== フローティングCTA ===== -->
+<div class="floating-cta">
+  <p>RECOVERY DRIVE × d design travel</p>
+  <a href="#" class="cta-btn">試乗予約 →</a>
+</div>
+
+<script>
+// Scroll fade-in
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// Nav shadow + floating CTA
+const nav = document.querySelector('.nav');
+const floating = document.querySelector('.floating-cta');
+const hero = document.querySelector('.hero');
+if (floating) floating.classList.add('hidden');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (nav) nav.classList.toggle('scrolled', y > 10);
+  if (floating && hero) floating.classList.toggle('hidden', y < hero.offsetHeight * 0.8);
+}, { passive: true });
+
+// コースタブ切替
+document.querySelectorAll('.course-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.target;
+    if (!target) return;
+    document.querySelectorAll('.course-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.course-panel, .timeline-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.panel === target);
+    });
+    // コース切替時はDAY1にリセット
+    document.querySelectorAll('.day-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.day === 'day1');
+    });
+    document.querySelectorAll('.day-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.day === 'day1');
+    });
+  });
+});
+
+// DAYトグル切替
+document.querySelectorAll('.day-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const day = tab.dataset.day;
+    if (!day) return;
+    const isBottom = tab.closest('.day-tabs-bottom') !== null;
+    document.querySelectorAll('.day-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.day === day);
+    });
+    document.querySelectorAll('.day-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.day === day);
+    });
+    if (isBottom) {
+      const target = document.getElementById('course');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>
