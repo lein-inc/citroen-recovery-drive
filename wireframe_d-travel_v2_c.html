@@ -1045,11 +1045,12 @@
     .cat-icon-wrap { min-width: 0; }
 
     /* 6. Googleマイマップ：正方形 */
-    .timeline-panel .placeholder[style*="height:520px"],
-    .timeline-panel .placeholder[style*="height: 520px"] {
+    .placeholder[style*="520px"] {
       height: auto !important;
       aspect-ratio: 1 / 1 !important;
       width: 100% !important;
+      min-height: 0 !important;
+      max-height: none !important;
     }
 
     /* 7. スポット記事：上に画像＋名前、下に本文を全幅で流す */
